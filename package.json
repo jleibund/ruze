@@ -1,0 +1,32 @@
+{
+    "name":"cameljs",
+    "version":"0.0.1",
+    "private":false,
+    "author":"J.P. Leibundguth <jleibund@gmail.com>",
+    "dependencies":{
+        "underscore":"latest",
+        "nodewatch":"latest",
+        "node-uuid":"latest"
+    },
+    "devDependencies":{
+        "express":">= 3.0.0rc4",
+        "mocha":"latest",
+        "should":"latest",
+        "supertest":"latest"
+    },
+    "scripts":{
+        "test":"./node_modules/mocha/bin/mocha --reporter spec test/*-mocha.js"
+    },
+    "keywords":[
+        "framework",
+        "camel",
+        "eip"
+    ],
+    "repository":{
+        "type":"git",
+        "url":"git@github.com:jleibund/cameljs"
+    },
+    "engines":{
+        "node":"*"
+    }
+}
