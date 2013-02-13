@@ -1,0 +1,27 @@
+{
+    "name":"file-component",
+    "version":"0.0.1",
+    "private":false,
+    "author":"J.P. Leibundguth <jleibund@gmail.com>",
+    "dependencies":{
+        "underscore":"latest",
+        "amdefine" : "latest",
+        "nodewatch":"latest"
+    },
+    "devDependencies":{
+        "mocha":"latest",
+        "should":"latest",
+        "supertest":"latest"
+    },
+    "scripts":{
+        "test":"./node_modules/mocha/bin/mocha --reporter spec test/*-mocha.js"
+    },
+    "keywords":[
+        "framework",
+        "camel",
+        "eip"
+    ],
+    "engines":{
+        "node":"*"
+    }
+}

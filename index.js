@@ -1,1 +1,1 @@
-module.exports = require('./lib/camel.js')
+module.exports = require('./lib/camel-test.js')

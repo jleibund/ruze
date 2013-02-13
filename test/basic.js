@@ -3,25 +3,25 @@ var express = require('express')
     , http = require('http')
     ,server = http.createServer(app);
 
-var Context = require('../lib/camel').Context;
+var Context = require('../cameljs/lib/camel-test').Context;
 var ctx = new Context();
 var fs = require('fs')
 var watch = require('nodewatch');
 
-//var dir = '/Users/jleibund/dev/cameljs/test';
+//var dir = '/Users/jleibundguth/dev/cameljs/test';
 var dir = './test'
 
-ctx.from('file:/Users/jleibund/dev/cameljs/test/in')
+ctx.from('file:/Users/jpleibundguth/dev/cameljs/test/in')
     .unmarshall().json()
     .to('console:log')
     .header().remove('filename')
     .header().add('extension','json')
     .marshall().json()
-    .to('file:/Users/jleibund/dev/cameljs/test/out');
+    .to('file:/Users/jpleibundguth/dev/cameljs/test/out');
 
 ctx.from('console:in')
     .header().add('extension','txt')
-    .to('file:/Users/jleibund/dev/cameljs/test/out')
+    .to('file:/Users/jpleibundguth/dev/cameljs/test/out')
 
 ctx.run();
 
