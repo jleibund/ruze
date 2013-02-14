@@ -1,0 +1,44 @@
+{
+    "plugins":[
+        {
+            "name":"file",
+            "config":{
+
+            }
+        },
+        {
+            "name":"json",
+            "tabCount":"3"
+        }
+    ],
+    "routes":[
+        {
+            "name":"readfromstuff_convert_to_json",
+            "from":"file://./stuff",
+            "marshall":"json",
+            "to":["console://stdout", "file://./out/stuff.json"]
+        }
+
+    ],
+    "containers":[
+        {
+            name:"supercontainer",
+            choice:"roundrobin",
+            endpoints:[
+                {
+                    name:'myserver1',
+                    socketio:"http://server1:8000/camel"
+                },
+                {
+                    name:'myserver2',
+                    socketio:"http://server2:8000/camel"
+                },
+                {
+                    name:'client',
+                    socketio:"---"
+                }
+            ]
+        }
+    ]
+
+}
