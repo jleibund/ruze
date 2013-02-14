@@ -8,9 +8,10 @@ module.exports.setUp = function(next){
     next();
 }
 module.exports.testDirectMock = function(done){
-    var mockEnd = camel.endpoint('mock:out');
-    mockEnd.expectedMessageCount(1);
-    camel.send('direct:in', 'helloworld');
-    mockEnd.assert();
-    done.done();
+    camel.endpoint('mock:out', function(mockEnd){
+        mockEnd.expectedMessageCount(1);
+        camel.send('direct:in', 'helloworld');
+        mockEnd.assert();
+        done.done();
+    });
 }
