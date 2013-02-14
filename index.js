@@ -1,6 +1,7 @@
 var requirejs = require('requirejs');
 requirejs.config({
-    nodeRequire:require
+    nodeRequire:require,
+    baseUrl:__dirname+'/lib'
 })
 
-module.exports = require('./lib/camel.js')
+module.exports = requirejs('camel')
