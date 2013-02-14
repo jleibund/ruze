@@ -10,6 +10,10 @@
         "express":"latest",
         "requirejs":"latest"
     },
+    "devDependencies":{
+        "nodeunit":"latest",
+        "should":"latest"
+    },
     "jam":{
         "baseUrl":"public/js",
         "packageDir":"public/js/jam",
