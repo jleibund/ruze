@@ -9,10 +9,13 @@ app.configure(function(){
     app.use('/js/camel',express.static(__dirname + '/lib'));
 })
 
-var camel = require('./lib/camel.js');
+var Camel = require('./index.js');
+var camel = new Camel();
 
-camel.from('console:in').to('console:out');
-camel.start();
+camel.define(function(){
+    camel.from('console:in').to('console:out');
+}).then(camel.start);
+//camel.start();
 
 
 app.listen(4000);

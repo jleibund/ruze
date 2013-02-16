@@ -7,9 +7,16 @@ requirejs.config({
     }
 })
 
-requirejs(['camel/camel'], function(camel) {
+requirejs(['camel/camel'], function(Camel) {
+    var camel = new Camel();
 
-    camel.from('dom:h1.project?on=click').to('console:out');
-    camel.start();
+    camel.define(function(){
+        camel.from('dom:h1.project?on=click').to('console:out');
+    }).then(function(){
+            camel.start()
+        }, function(err){
+            console.log(arguments);
+        });
+
 
 });
