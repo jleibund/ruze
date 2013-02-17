@@ -14,7 +14,10 @@ requirejs(['camel/camel'], function(Camel) {
     var camel = new Camel();
 
     camel.define(function(){
-        camel.from('dom:h1.project?on=click').to('console:out');
+        camel.from('dom:h1.project?on=click').to('direct:a');
+
+        camel.from('direct:a').to('console:out')
+
     }).then(function(){
             camel.start()
         }, function(err){
