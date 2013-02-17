@@ -1,6 +1,6 @@
 
 var Camel =  require('../index.js');
-var camel = new Camel({preload:['mock','direct']});
+var camel = new Camel();
 
 module.exports.setUp = function(next){
 
@@ -8,15 +8,18 @@ module.exports.setUp = function(next){
         camel.from('direct:in').to('mock:out');
     }).then(function(){
         return camel.start();
+    }).then(function(){
+            next();
     });
 
-    next();
 }
 module.exports.testDirectMock = function(done){
     camel.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
         camel.send('direct:in', 'helloworld');
         mockEnd.assert();
-        done.done();
+//        done.done();
+    }).then(function(){
+        done.done()
     });
 }
