@@ -10,10 +10,14 @@ app.configure(function(){
 })
 
 var Camel = require('./index.js');
-var camel = new Camel({preload:[]});
+var camel = new Camel({preload:['header']});
 
 camel.define(function(){
-    camel.from('console:in').to('console:out');
+    camel.from('console:in').to('direct:a');
+
+    camel.from('direct:a').to('console:out');
+
+
 }).then(function(){
     return camel.start();
 });
