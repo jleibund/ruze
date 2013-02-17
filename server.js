@@ -14,7 +14,9 @@ var camel = new Camel();
 
 camel.define(function(){
     camel.from('console:in').to('console:out');
-}).then(camel.start);
+}).then(function(){
+    return camel.start();
+});
 //camel.start();
 
 
