@@ -19,10 +19,8 @@ requirejs(['camel/camel'], function(Camel) {
         camel.from('direct:a').to('console:out')
 
     }).then(function(){
-            camel.start()
-        }, function(err){
-            console.log(arguments);
-        });
+        camel.start()
+    }).done();
 
 
 });

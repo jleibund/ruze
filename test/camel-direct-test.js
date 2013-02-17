@@ -10,7 +10,7 @@ module.exports.setUp = function(next){
         return camel.start();
     }).then(function(){
             next();
-    });
+    }).done();
 
 }
 module.exports.testDirectMock = function(done){
@@ -21,5 +21,5 @@ module.exports.testDirectMock = function(done){
 //        done.done();
     }).then(function(){
         done.done()
-    });
+    }).done();
 }

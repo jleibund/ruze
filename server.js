@@ -14,13 +14,10 @@ var camel = new Camel({preload:['header']});
 
 camel.define(function(){
     camel.from('console:in').to('direct:a');
-
     camel.from('direct:a').to('console:out');
-
-
 }).then(function(){
     return camel.start();
-});
+}).done();
 //camel.start();
 
 
