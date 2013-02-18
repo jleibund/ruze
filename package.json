@@ -6,6 +6,7 @@
         "amdefine":"latest",
         "node-uuid":"latest",
         "underscore":"latest",
+        "q":"latest",
         "jquery":"latest",
         "express":"latest",
         "requirejs":"latest"
