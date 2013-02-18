@@ -10,15 +10,17 @@ app.configure(function(){
 })
 
 var Camel = require('./index.js');
-var camel = new Camel({preload:['header','process']});
+var camel = new Camel({preload:['header','process','format']});
 
 camel.define(function(){
     camel.from('console:in').header().add('what','color').to('direct:a');
     camel.from('direct:a')
         .process(function(exchange,next){
             console.log('process:  header contains-- ',exchange.in.header);
+            exchange.in.body = '{\"statement\":\"'+exchange.in.body+'\"}';
             next();
         })
+        .marshall().json()
         .to('console:out');
 }).then(function(){
     return camel.start();
