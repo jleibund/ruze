@@ -10,11 +10,16 @@ app.configure(function(){
 })
 
 var Camel = require('./index.js');
-var camel = new Camel({preload:['header']});
+var camel = new Camel({preload:['header','process']});
 
 camel.define(function(){
     camel.from('console:in').header().add('what','color').to('direct:a');
-    camel.from('direct:a').to('console:out');
+    camel.from('direct:a')
+        .process(function(exchange,next){
+            console.log('process:  header contains-- ',exchange.in.header);
+            next();
+        })
+        .to('console:out');
 }).then(function(){
     return camel.start();
 }).done();
