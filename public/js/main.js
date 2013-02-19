@@ -2,6 +2,7 @@
 requirejs.config({
     baseUrl:'/js',
     paths:{
+        types:'camel/plugin/format/types',
         plugin:'camel/plugin',
         camel:'camel'
     }
