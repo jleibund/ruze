@@ -15,15 +15,16 @@ var camel = new Camel({preload:['header','process','format']});
 camel.configure(function(){
     camel.from('console:in').to('direct:a');
     camel.from('direct:a').to('console:out');
-    camel.from('direct:a')
-        .process(function(exchange,next){
-            console.log('process:  header contains-- ',exchange.in.header);
-            exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
-            next();
-        })
-        .to('console:out');
+    camel.from('direct:a').to('console:out');
+//    camel.from('direct:a')
+//        .process(function(exchange,next){
+//            console.log('process:  header contains-- ',exchange.in.header);
+//            exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
+//            next();
+//        })
+//        .to('console:out');
 });
-camel.start();
+camel.start(function(){camel.print()});
 
 
 app.listen(4000);
