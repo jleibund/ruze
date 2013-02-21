@@ -9,7 +9,8 @@
         "q":"latest",
         "jquery":"latest",
         "express":"latest",
-        "requirejs":"latest"
+        "requirejs":"latest",
+        "colors":"latest"
     },
     "devDependencies":{
         "nodeunit":"latest",
