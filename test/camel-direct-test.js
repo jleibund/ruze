@@ -21,7 +21,7 @@ module.exports.testDirectMock = function(done){
         mockEnd.expectedMessageCount(1);
         camel.send('direct:in', 'helloworld');
         mockEnd.assert();
-//        mockEnd.maxWait(2000);
+        mockEnd.maxWait(2000);
 //        done.done();
     }).then(function(){
         done.done()
@@ -31,7 +31,7 @@ module.exports.testDirectMockTimeout = function(done){
     camel.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
         camel.send('direct:in', 'helloworld');
-//        mockEnd.maxWait(2001);
+//        mockEnd.maxWait(0);
         mockEnd.assert();
 //        done.done();
     }).then(function(){
