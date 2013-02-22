@@ -30,11 +30,13 @@ module.exports.testDirectMock = function(done){
 module.exports.testDirectMockTimeout = function(done){
     camel.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        camel.send('direct:in', 'helloworld');
-//        mockEnd.maxWait(0);
-        mockEnd.assert();
-//        done.done();
+        mockEnd.maxWait(3000);
+        setTimeout(function(){
+            camel.send('direct:in', 'helloworld');
+            mockEnd.assert();
+        },2000);
     }).then(function(){
             done.done()
         }).done();
+
 }
