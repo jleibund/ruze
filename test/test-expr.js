@@ -1,8 +1,8 @@
 
-var expr =  require('../lib/expr');
-
+var Parser =  require('../lib/expr').Parser;
 
 module.exports.testCrap = function(done){
-    expr.some('This is a statement ${this is not ${ inner }} and some more text','${','}');
+    var parser = new Parser('1 + 1 / 3 % 0x00FA');
+    console.log(parser.body[0].expression)
     done.done();
 }
