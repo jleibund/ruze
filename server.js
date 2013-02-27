@@ -10,11 +10,13 @@ app.configure(function(){
 })
 
 var Camel = require('./index.js');
-var camel = new Camel({preload:['header','process','format']});
+var camel = new Camel({preload:['process','expr']});
+
+// expr('out.body= in.header.a')
 
 camel.configure(function(){
-    camel.from('console:in').to('direct:a');
-    camel.from('direct:a').to('console:out');
+    camel.from('console:in').expr('in.header.a="3"').to('direct:a');
+    camel.from('direct:a').expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body').to('console:out');
     camel.from('direct:a').to('console:out');
     camel.from('direct:a')
         .process(function(exchange,next){
@@ -22,10 +24,10 @@ camel.configure(function(){
             exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
             next();
         })
-        .to('console:out');
+        .expr('bodyAs("json")').to('console:out');
 });
 camel.start(function(){
-    camel.print();
+//    camel.print();
     camel.send('direct:a','hello')
 });
 
