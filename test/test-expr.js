@@ -1,5 +1,5 @@
 
-var Parser =  require('../lib/expr').Parser;
+var Parser =  require('exprjs').Parser;
 var p = new Parser();
 
 module.exports.testMath = function(done){
