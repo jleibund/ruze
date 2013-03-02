@@ -1,7 +1,7 @@
 {
-    "name":"ruzejs",
+    "name":"ruze",
     "version":"0.0.1",
-    "private":true,
+    "private":false,
     "dependencies":{
         "amdefine":"latest",
         "node-uuid":"latest",
