@@ -9,8 +9,7 @@
             "name":"read from dom element and send direct",
             "route":[
                 {"from":"dom:h1.project?on=click"},
-                {"expr":"in.header.timeStamp=in.body.timeStamp"},
-                {"to":"direct:a"}
+                {"expr":"in.header.timeStamp=in.body.timeStamp, recipientList=['direct:a']"}
             ]
         },
         {
