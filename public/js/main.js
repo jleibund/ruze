@@ -2,9 +2,9 @@
 requirejs.config({
     baseUrl:'/js',
     paths:{
-        types:'ruze/plugin/format/types',
-        plugin:'ruze/plugin',
-        ruze:'ruze'
+        ruze:'ruze',
+        cutils:'ruze/cutils',
+        path:'ruze/path'
     }
 })
 
@@ -14,14 +14,12 @@ requirejs(['ruze/ruze'], function(Ruze) {
 
     var ruze = new Ruze();
 
-    ruze.define(function(){
+    ruze.configure(function(){
         ruze.from('dom:h1.project?on=click').to('direct:a');
-
         ruze.from('direct:a').to('console:out')
 
-    }).then(function(){
-        ruze.start()
-    }).done();
+    });
+    ruze.start()
 
 
 });
