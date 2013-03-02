@@ -267,3 +267,7 @@ function zalgo(text, options) {
 addProperty('stripColors', function() {
     return ("" + this).replace(/\u001b\[\d+m/g,'');
 });
+
+define(function(){
+    return colors;
+})

@@ -7,10 +7,12 @@ module.exports.setUp = function(done){
     if (!ruze){
         ruze = new Ruze();
         ruze.configure(function(){
+            ruze.from('dom:h1.project?on=click').to('mock:out');
             ruze.from('direct:in').to('mock:out');
         });
         ruze.start(function(){
-            ruze.print();
+
+            console.log(ruze.print());
             done()
         });
     } else {
