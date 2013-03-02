@@ -1,19 +1,19 @@
 
-var Camel =  require('../index.js'), _ = require('underscore');
+var Ruze =  require('../index.js'), _ = require('underscore');
 
-var camel;
+var ruze;
 
 module.exports.setUp = function(done){
 
-    if (!camel){
-        camel = new Camel();
-        camel.configure(function(){
-            camel.from('direct:a')
+    if (!ruze){
+        ruze = new Ruze();
+        ruze.configure(function(){
+            ruze.from('direct:a')
                 .expr('in.header.a="3"')
                 .expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body')
                 .to('console:log')
                 .to('mock:out');
-            camel.from('direct:b')
+            ruze.from('direct:b')
                 .process(function(exchange,next){
 //                console.log('process:  header contains-- ',exchange.in.header);
                     exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
@@ -22,8 +22,8 @@ module.exports.setUp = function(done){
                 .expr('bodyAs("json")')
                 .to('mock:out');
         });
-        camel.start(function(){
-            camel.print();
+        ruze.start(function(){
+            ruze.print();
             done();
         });
     } else {
@@ -33,9 +33,9 @@ module.exports.setUp = function(done){
 }
 module.exports.testDirectAMock = function(done){
 
-    camel.endpoint('mock:out', function(mockEnd){
+    ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        camel.send('direct:a', 'hello');
+        ruze.send('direct:a', 'hello');
         mockEnd.assert();
     }).then(function(){
         done.done()
@@ -44,9 +44,9 @@ module.exports.testDirectAMock = function(done){
 
 module.exports.testDirectBMock = function(done){
 
-    camel.endpoint('mock:out', function(mockEnd){
+    ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        camel.send('direct:b', 'world');
+        ruze.send('direct:b', 'world');
         mockEnd.assert();
     }).then(function(){
         done.done()

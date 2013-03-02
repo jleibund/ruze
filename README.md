@@ -1,4 +1,4 @@
-cameljs
+ruzejs
 =======
 
-Toying around with port of Camel EIP java -> nodejs
+EIP with remoting for javascript

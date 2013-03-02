@@ -6,19 +6,19 @@ var express = require('express')
 app.configure(function(){
     app.use(express.logger());
     app.use(express.static(__dirname + '/public'));
-    app.use('/js/camel',express.static(__dirname + '/lib'));
+    app.use('/js/ruze',express.static(__dirname + '/lib'));
 })
 
-var Camel = require('./index.js');
-var camel = new Camel({preload:['process','expr']});
+var Ruze = require('./index.js');
+var ruze = new Ruze({preload:['process','expr']});
 
 // expr('out.body= in.header.a')
 
-camel.configure(function(){
-    camel.from('console:in').expr('in.header.a="3"').to('direct:a');
-    camel.from('direct:a').expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body').to('console:out');
-    camel.from('direct:a').to('console:out');
-    camel.from('direct:a')
+ruze.configure(function(){
+    ruze.from('console:in').expr('in.header.a="3"').to('direct:a');
+    ruze.from('direct:a').expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body').to('console:out');
+    ruze.from('direct:a').to('console:out');
+    ruze.from('direct:a')
         .process(function(exchange,next){
             console.log('process:  header contains-- ',exchange.in.header);
             exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
@@ -26,9 +26,9 @@ camel.configure(function(){
         })
         .expr('bodyAs("json")').to('console:out');
 });
-camel.start(function(){
-//    camel.print();
-    camel.send('direct:a','hello')
+ruze.start(function(){
+//    ruze.print();
+    ruze.send('direct:a','hello')
 });
 
 

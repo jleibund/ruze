@@ -2,25 +2,25 @@
 requirejs.config({
     baseUrl:'/js',
     paths:{
-        types:'camel/plugin/format/types',
-        plugin:'camel/plugin',
-        camel:'camel'
+        types:'ruze/plugin/format/types',
+        plugin:'ruze/plugin',
+        ruze:'ruze'
     }
 })
 
-requirejs(['camel/camel'], function(Camel) {
+requirejs(['ruze/ruze'], function(Ruze) {
 
     // todo - right now lazy loading and promises are driving me crazy, configuring with the options for preload
 
-    var camel = new Camel();
+    var ruze = new Ruze();
 
-    camel.define(function(){
-        camel.from('dom:h1.project?on=click').to('direct:a');
+    ruze.define(function(){
+        ruze.from('dom:h1.project?on=click').to('direct:a');
 
-        camel.from('direct:a').to('console:out')
+        ruze.from('direct:a').to('console:out')
 
     }).then(function(){
-        camel.start()
+        ruze.start()
     }).done();
 
 

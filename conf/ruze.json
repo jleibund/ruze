@@ -27,11 +27,11 @@
             endpoints:[
                 {
                     name:'myserver1',
-                    socketio:"http://server1:8000/camel"
+                    socketio:"http://server1:8000/ruze"
                 },
                 {
                     name:'myserver2',
-                    socketio:"http://server2:8000/camel"
+                    socketio:"http://server2:8000/ruze"
                 },
                 {
                     name:'client',

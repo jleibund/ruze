@@ -1,16 +1,16 @@
 
-var Camel =  require('../index.js');
-var camel;
+var Ruze =  require('../index.js');
+var ruze;
 
 module.exports.setUp = function(done){
 
-    if (!camel){
-        camel = new Camel();
-        camel.configure(function(){
-            camel.from('direct:in').to('mock:out');
+    if (!ruze){
+        ruze = new Ruze();
+        ruze.configure(function(){
+            ruze.from('direct:in').to('mock:out');
         });
-        camel.start(function(){
-            camel.print();
+        ruze.start(function(){
+            ruze.print();
             done()
         });
     } else {
@@ -19,9 +19,9 @@ module.exports.setUp = function(done){
 
 }
 module.exports.testDirectMock = function(done){
-    camel.endpoint('mock:out', function(mockEnd){
+    ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        camel.send('direct:in', 'helloworld');
+        ruze.send('direct:in', 'helloworld');
         mockEnd.assert();
         mockEnd.maxWait(2000);
     }).then(function(){
@@ -29,11 +29,11 @@ module.exports.testDirectMock = function(done){
     }).done();
 }
 module.exports.testDirectMockTimeout = function(done){
-    camel.endpoint('mock:out', function(mockEnd){
+    ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
         mockEnd.maxWait(3000);
         setTimeout(function(){
-            camel.send('direct:in', 'helloworld');
+            ruze.send('direct:in', 'helloworld');
             mockEnd.assert();
         },2000);
     }).then(function(){

@@ -4,4 +4,4 @@ requirejs.config({
     baseUrl:__dirname+'/lib'
 })
 
-module.exports = requirejs('camel')
+module.exports = requirejs('ruze')
