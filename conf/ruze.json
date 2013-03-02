@@ -1,41 +1,39 @@
 {
-    "plugins":[
-        {
-            "name":"file",
-            "config":{
-
-            }
-        },
-        {
-            "name":"json",
-            "tabCount":"3"
+    "plugins":{
+        "direct":{
+            "debug":true
         }
-    ],
+    },
     "routes":[
         {
-            "name":"readfromstuff_convert_to_json",
-            "from":"file://./stuff",
-            "marshall":"json",
-            "to":["console://stdout", "file://./out/stuff.json"]
+            "name":"read from dom element and send direct",
+            "route":[
+                {"from":"dom:h1.project?on=click"},
+                {"expr":"in.header.timeStamp=in.body.timeStamp"},
+                {"to":"direct:a"}
+            ]
+        },
+        {
+            "name":"read from direct and send to console",
+            "route":[
+                {"from":"direct:a"},
+                {"to":"console:out"}
+            ]
         }
-
-    ],
+    ]
+    ,
     "containers":[
         {
-            name:"supercontainer",
-            choice:"roundrobin",
-            endpoints:[
+            "name":"remote",
+            "choice":"roundrobin",
+            "paths":[
                 {
-                    name:'myserver1',
-                    socketio:"http://server1:8000/ruze"
+                    "name":"myserver",
+                    "socketio":"http://server1:8000/ruze"
                 },
                 {
-                    name:'myserver2',
-                    socketio:"http://server2:8000/ruze"
-                },
-                {
-                    name:'client',
-                    socketio:"---"
+                    "name":"yourserver",
+                    "socketio":"http://server2:8000/ruze"
                 }
             ]
         }

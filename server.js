@@ -7,6 +7,7 @@ app.configure(function(){
     app.use(express.logger());
     app.use(express.static(__dirname + '/public'));
     app.use('/js/ruze',express.static(__dirname + '/lib'));
+    app.use('/conf',express.static(__dirname + '/conf'));
 })
 
 var Ruze = require('./index.js');
