@@ -9,13 +9,25 @@
             "name":"read from dom element and send direct",
             "route":[
                 {"from":"dom:h1.project?on=click"},
-                {"expr":"in.header.timeStamp=in.body.timeStamp, recipientList=['direct:a']"}
+                {"expr":"in.header.timeStamp=in.body.timeStamp"},
+                {"when":"in.body.timeStamp==2"},
+                {"to":"direct:a"},
+                {"otherwise":""},
+                {"to":"direct:b"}
             ]
         },
         {
             "name":"read from direct and send to console",
             "route":[
                 {"from":"direct:a"},
+                {"to":"console:out"}
+            ]
+        },
+        {
+            "name":"read from direct and send to console",
+            "route":[
+                {"from":"direct:b"},
+                {"expr":"in.body='blah'"},
                 {"to":"console:out"}
             ]
         }

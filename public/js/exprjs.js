@@ -61,14 +61,9 @@ define( function () {
     };
     /* end copy */
 
-
     /*
-
-     Below is a modified version of acorn.js to focus on a pure, one-liner expression language
-     - removes all multi-line parsing, control structures, loops, definitions, this, try/throw, etc
-     - uses Marijn's AST tree walker
-     - changed from singleton to more of a javascript class structure
-
+     Following section is adapted from the acorn parser removing full program capabilities
+     like control structures, multi-line programs, loops, this, declarations, etc
      */
 
     /*
@@ -97,7 +92,6 @@ define( function () {
      licences.
      */
 
-
     var _bracketL = {type: '[', beforeExpr: true},
         _bracketR = {type: ']'},
         _braceL = {type: '{', beforeExpr: true},
@@ -107,9 +101,7 @@ define( function () {
         _comma = {type: ',', beforeExpr: true},
         _colon = {type: ':', beforeExpr: true},
         _dot = {type: '.'},
-        _question = {type:'?', beforeExpr: true},
-        _templL = {type:'${', beforeExpr:true },
-        _templR = {type:'}' };
+        _question = {type:'?', beforeExpr: true};
 
 
     var _slash = {binop: 10, beforeExpr: true}, _eq = {isAssign: true, beforeExpr: true};
@@ -208,17 +200,14 @@ define( function () {
 
 
 
-    /**
-     * Start all routes or pass routes to start as arguments
-     * @param expr this is the expression
-     * @param refs this is an object that contains all of the component instances for ref:
-     * @param obj these are objects to operate on, e.g. exchange
-     * @param obj more of the above
-     */
     var Parser = function() {
         this.walker = new Walker();
     }
 
+    /**
+     * Parse an expression, save off result for run()
+     * @param expr this is the expression
+     */
     Parser.prototype.parse = function(expr){
         this.tok = {pos:0,end:0,start:0,type:null,val:null,regexp:false};
         this.last = {start:0, end:0, endLoc:0};
@@ -228,6 +217,12 @@ define( function () {
         return this.parseTopLevel().body[0];
     }
 
+    /**
+     * Run a parsed expression (can run repeatedly on different objects
+     * @param expr this is the parsed expression (an AST
+     * @param obj1 object you want in scope, note that expressions can modify your object
+     * @param obj2 object you want in scope, note that expressions can modify your object
+     */
     Parser.prototype.run = function(parsed, obj1, obj2){
         var clone = extend({},parsed);
         var args = Array.prototype.slice.call(arguments,1);
@@ -939,28 +934,35 @@ define( function () {
 
 
     /*
-
-     - Marijn's AST tree walker
-     - removes all control structures, declarations, loops, etc
-     - more of a javascript class structure instead of a singleton
+     Following section is adapted from the AST walk code removing full program capabilities
+     like control structures, multi-line programs, loops, this, declarations, etc
      */
 
+    /*
+     Copyright (C) 2012 by Marijn Haverbeke <marijnh@gmail.com>
 
-    // A simple walk is one where you simply specify callbacks to be
-    // called on specific nodes. The last two arguments are optional. A
-    // simple use would be
-    //
-    //     walk.simple(myTree, {
-    //         Expression: function(node) { ... }
-    //     });
-    //
-    // to do something with all expressions. All Parser API node types
-    // can be used to identify node types, as well as Expression,
-    // Statement, and ScopeBody, which denote categories of nodes.
-    //
-    // The base argument can be used to pass a custom (recursive)
-    // walker, and state can be used to give this walked an initial
-    // state.
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the "Software"), to deal
+     in the Software without restriction, including without limitation the rights
+     to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     copies of the Software, and to permit persons to whom the Software is
+     furnished to do so, subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in
+     all copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     THE SOFTWARE.
+
+     Please note that some subdirectories of the CodeMirror distribution
+     include their own LICENSE files, and are released under different
+     licences.
+     */
 
     var Walker = function(){}
 
@@ -1095,75 +1097,11 @@ define( function () {
     base.ExpressionStatement = function(node, st, c) {
         c(node.expression, st, "Expression");
     };
-//    base.IfStatement = function(node, st, c) {
-//        c(node.test, st, "Expression");
-//        c(node.consequent, st, "Statement");
-//        if (node.alternate) c(node.alternate, st, "Statement");
-//    };
     base.LabeledStatement = function(node, st, c) {
         c(node.body, st, "Statement");
     };
-//    base.BreakStatement = base.ContinueStatement = ignore;
-//    base.WithStatement = function(node, st, c) {
-//        c(node.object, st, "Expression");
-//        c(node.body, st, "Statement");
-//    };
-//    base.SwitchStatement = function(node, st, c) {
-//        c(node.discriminant, st, "Expression");
-//        for (var i = 0; i < node.cases.length; ++i) {
-//            var cs = node.cases[i];
-//            if (cs.test) c(cs.test, st, "Expression");
-//            for (var j = 0; j < cs.consequent.length; ++j)
-//                c(cs.consequent[j], st, "Statement");
-//        }
-//    };
-//    base.ReturnStatement = function(node, st, c) {
-//        if (node.argument) c(node.argument, st, "Expression");
-//    };
-//    base.ThrowStatement = function(node, st, c) {
-//        c(node.argument, st, "Expression");
-//    };
-//    base.TryStatement = function(node, st, c) {
-//        c(node.block, st, "Statement");
-//        for (var i = 0; i < node.handlers.length; ++i)
-//            c(node.handlers[i].body, st, "ScopeBody");
-//        if (node.finalizer) c(node.finalizer, st, "Statement");
-//    };
-//    base.WhileStatement = function(node, st, c) {
-//        c(node.test, st, "Expression");
-//        c(node.body, st, "Statement");
-//    };
-//    base.DoWhileStatement = base.WhileStatement;
-//    base.ForStatement = function(node, st, c) {
-//        if (node.init) c(node.init, st, "ForInit");
-//        if (node.test) c(node.test, st, "Expression");
-//        if (node.update) c(node.update, st, "Expression");
-//        c(node.body, st, "Statement");
-//    };
-//    base.ForInStatement = function(node, st, c) {
-//        c(node.left, st, "ForInit");
-//        c(node.right, st, "Expression");
-//        c(node.body, st, "Statement");
-//    };
-//    base.ForInit = function(node, st, c) {
-//        if (node.type == "VariableDeclaration") c(node, st);
-//        else c(node, st, "Expression");
-//    };
     base.DebuggerStatement = ignore;
 
-//    base.FunctionDeclaration = function(node, st, c) {
-//        c(node, st, "Function");
-//    };
-//    base.VariableDeclaration = function(node, st, c) {
-//        for (var i = 0; i < node.declarations.length; ++i) {
-//            var decl = node.declarations[i];
-//            if (decl.init) c(decl.init, st, "Expression");
-//        }
-//    };
-
-//    base.Function = function(node, st, c) {
-//        c(node.body, st, "ScopeBody");
-//    };
     base.ScopeBody = function(node, st, c) {
         c(node, st, "Statement");
     };
@@ -1180,7 +1118,6 @@ define( function () {
         for (var i = 0; i < node.properties.length; ++i)
             c(node.properties[i].value, st, "Expression");
     };
-//    base.FunctionExpression = base.FunctionDeclaration;
     base.SequenceExpression = function(node, st, c) {
         for (var i = 0; i < node.expressions.length; ++i)
             c(node.expressions[i], st, "Expression");
@@ -1209,60 +1146,16 @@ define( function () {
     };
     base.Identifier = base.Literal = ignore;
 
-    // A custom walker that keeps track of the scope chain and the
-    // variables defined in it.
-//    function makeScope(prev) {
-//        return {vars: Object.create(null), prev: prev};
-//    }
-//    exports.scopeVisitor = exports.make({
-//        Function: function(node, scope, c) {
-//            var inner = makeScope(scope);
-//            for (var i = 0; i < node.params.length; ++i)
-//                inner.vars[node.params[i].name] = {type: "argument", node: node.params[i]};
-//            if (node.id) {
-//                var decl = node.type == "FunctionDeclaration";
-//                (decl ? scope : inner).vars[node.id.name] =
-//                {type: decl ? "function" : "function name", node: node.id};
-//            }
-//            c(node.body, inner, "ScopeBody");
-//        },
-//        TryStatement: function(node, scope, c) {
-//            c(node.block, scope, "Statement");
-//            for (var i = 0; i < node.handlers.length; ++i) {
-//                var handler = node.handlers[i], inner = makeScope(scope);
-//                inner.vars[handler.param.name] = {type: "catch clause", node: handler.param};
-//                c(handler.body, inner, "ScopeBody");
-//            }
-//            if (node.finalizer) c(node.finalizer, scope, "Statement");
-//        },
-//        VariableDeclaration: function(node, scope, c) {
-//            for (var i = 0; i < node.declarations.length; ++i) {
-//                var decl = node.declarations[i];
-//                scope.vars[decl.id.name] = {type: "var", node: decl.id};
-//                if (decl.init) c(decl.init, scope, "Expression");
-//            }
-//        }
-//    });
-
-
-    /*
-     Begin my code (J.P.) ->
-     - these are definitions I may use to add primitive functions in the future to the lexicon..  e.g. Array.prototype.splice(...)
-     */
-
+    // future objects I may use to add in javascript primitive functions.. e.g. Array.prototype.splice(...)
 
     var objFuncs = {hasOwnProperty:Object.prototype.hasOwnProperty, isPrototypeOf:Object.prototype.isPrototypeOf, propertyIsEnumerable:Object.prototype.propertyIsEnumerable,
         toString:Object.prototype.toString, toLocaleString:Object.prototype.toLocaleString()};
     var arrayFuncs = {split:Array.prototype.split, splice:Object.prototype.splice, create:Object.prototype.create}
     var stringFuncs = {call:Object.prototype.call, apply:Object.prototype.apply, create:Object.prototype.create}
 
-    /*
-     my logic for the tree walker for expression parsing
-     - maintains all objects in scope inside the state object, st, under st.ref = [obj1, obj2]
-     - result of the operation returns st.result
-     - the AST must be cloned (see run method ago) when its passed in as the walker modifies it as it calculates the result
-     */
 
+
+    // helper function for traversal
 
     var getTarget = function(field, st,cb){
 
@@ -1294,9 +1187,26 @@ define( function () {
         if (isObj){
             // if we didn't find it we'll try
             obj = field.object && field.object.value;
+
+            if (!obj){
+                var found = 0;
+
+                var len = st.refs && st.refs.length;
+                for (var i= 0;i<len; i++){
+                    var ref = st.refs[i];
+                    if (ref && ref[field.object.name] != undefined){
+                        obj = ref[field.object.name];
+                        found++;
+                    }
+                }
+                if (found > 1) throw new Error('environment has duplicate keys named '+name);
+            }
+
             prop = field.property && field.property.name;
             if (obj){
                 value = obj[prop];
+            } else {
+                throw new Error ('no such object '+obj)
             }
             return cb(value,obj,prop);
         }
@@ -1305,6 +1215,12 @@ define( function () {
         if (field.hasOwnProperty('value')) return cb(field.value);
 
     }
+
+
+    /*
+     Following section include the overrides for expression execution on target objects, stored in st.refs
+     that produces output on st.result.  Note this modifies AST values inline so nodes must be extended before execution
+     */
 
     var handlers = {
         ExpressionStatement:function(node, st){
@@ -1373,31 +1289,16 @@ define( function () {
             node.value = newVal;
         },
         MemberExpression:function(node, st){
-            if (!node.value){
-                // look it up in state
+//            if (!node.value){
+            // look it up in state
 //                var obj = st[node.object.name];
-                var obj = null;
-                var found = 0;
-                if (st.refs){
-                    var len = st.refs.length;
-                    for (var i= 0;i<len; i++){
-                        if (st.refs[i][node.object.name]){
-                            obj = st.refs[i][node.object.name];
-                            found++;
-                        }
-                    }
-                }
-                if (!obj) obj = node.object.value;
-                if (!obj) throw new Error('environment has no object '+node.object.name);
-                if (found>1) throw new Error('environment has several objects with '+node.object.name);
-                node.object.value = obj;
-                var prop = obj[node.property.name];
-                if (!prop){
-                    obj[node.property.name] = null;
-                }
-                node.property.value = prop;
-                node.value = prop;
-            }
+            var obj, prop, value, operator = node.operator, prefix = node.prefix;
+            getTarget(node,st, function(val,o,p){obj=o;prop=p;value=val;});
+            node.object.value = obj;
+            node.property.value = prop;
+            if (obj)
+                node.value = obj[prop];
+//            }
         },
         CallExpression:function(node, st){
             var func = node.callee.name;
