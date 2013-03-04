@@ -6,6 +6,7 @@
         "amdefine":"latest",
         "node-uuid":"latest",
         "underscore":"latest",
+        "socket.io" : "latest",
         "q":"latest",
         "jquery":"latest",
         "express":"latest",

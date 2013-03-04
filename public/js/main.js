@@ -6,28 +6,28 @@ requirejs.config({
         cutils:'ruze/cutils',
         path:'ruze/path',
         conf:'../conf'
-    }
+    },
+    waitSeconds:0
 })
 
-requirejs(['ruze/ruze','jquery','text!conf/ruze.json'], function(Ruze,$,json) {
+requirejs(['ruze/ruze','jquery','text!conf/ruze.json','socket.io'], function(Ruze,$,json,io) {
 
     // todo - right now lazy loading and promises are driving me crazy, configuring with the options for preload
 
-    var ruze = new Ruze();
+    var ruze = new Ruze({io:io, connect:{myserver:'http://localhost:4000/events'}});
 
-//    console.log(json)
+//    ruze.configure(json);
 
-    ruze.configure(json);
+    ruze.configure(function(){
+        ruze.from('dom:h1.project?on=click')
+            .expr('in.header.timeStamp=in.body.timeStamp')
+            .to('myserver:direct:a')
+            .to('console:out');
 
-//    ruze.configure(function(){
-//        ruze.from('dom:h1.project?on=click')
-//            .expr('in.header.timeStamp=in.body.timeStamp')
-//            .to('direct:a');
-//
 //        ruze.from('direct:a')
 //            .to('console:out')
-//
-//    });
+
+    });
     ruze.start(function(){
         $('.diagnostics').html(ruze.print());
     })
