@@ -20,7 +20,7 @@ requirejs(['ruze/ruze','jquery','text!conf/ruze.json','socket.io'], function(Ruz
 
     ruze.configure(function(){
         ruze.from('dom:h1.project?on=click')
-            .expr('in.header.timeStamp=in.body.timeStamp')
+            .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
             .to('console:out');
 

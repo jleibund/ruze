@@ -1,11 +1,11 @@
 var express = require('express')
     , app = express()
     , http = require('http')
-    , io = require('socket.io').listen(app.listen(4000))
+    , io = require('socket.io').listen(app.listen(4000),{log:false})
     ,server = http.createServer(app);
 
 app.configure(function(){
-    app.use(express.logger());
+//    app.use(express.logger());
     app.use(express.static(__dirname + '/public'));
     app.use('/js/ruze',express.static(__dirname + '/lib'));
     app.use('/conf',express.static(__dirname + '/conf'));
@@ -19,7 +19,11 @@ var ruze = new Ruze({preload:['process','expr'],listen:true, io:io.of('/events')
 ruze.configure(function(){
 //    ruze.from('console:in').expr('in.header.a="3"').to('direct:a');
 //    ruze.from('direct:a').expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body').to('console:out');
-    ruze.from('direct:a').to('console:out');
+    ruze.from('console:in')
+        .process(function(e,next){
+            console.log(ruze.print());
+            next();
+        })
 //    ruze.from('direct:a')
 //        .process(function(exchange,next){
 //            console.log('process:  header contains-- ',exchange.in.header);
