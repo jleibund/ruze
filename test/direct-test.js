@@ -7,7 +7,6 @@ module.exports.setUp = function(done){
     if (!ruze){
         ruze = new Ruze();
         ruze.configure(function(){
-            ruze.from('dom:h1.project?on=click').to('mock:out');
             ruze.from('direct:in').to('mock:out');
         });
         ruze.start(function(){
@@ -35,7 +34,7 @@ module.exports.testDirectMockTimeout = function(done){
         mockEnd.expectedMessageCount(1);
         mockEnd.maxWait(3000);
         setTimeout(function(){
-            ruze.send('direct:in', 'helloworld');
+            ruze.send('local:direct:in', 'helloworld');
             mockEnd.assert();
         },2000);
     }).then(function(){
