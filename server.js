@@ -19,7 +19,7 @@ var ruze = new Ruze({preload:['process','expr'],listen:true, io:io.of('/events')
 ruze.configure(function(from){
 //    ruze.from('console:in').expr('in.header.a="3"').to('direct:a');
 //    ruze.from('direct:a').expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body').to('console:out');
-    ruze.from('console:in')
+    from('console:in')
         .process(function(e,next){
             console.log(ruze.print());
             next();

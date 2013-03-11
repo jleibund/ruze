@@ -6,8 +6,8 @@ module.exports.setUp = function(done){
 
     if (!ruze){
         ruze = new Ruze();
-        ruze.configure(function(){
-            ruze.from('direct:in').to('mock:out');
+        ruze.configure(function(from){
+            from('direct:in').to('mock:out');
         });
         ruze.start(function(){
 
