@@ -2,7 +2,7 @@ var express = require('express')
     , app = express()
     , http = require('http')
     , io = require('socket.io').listen(app.listen(4000),{log:false})
-    ,server = http.createServer(app);
+    , server = http.createServer(app);
 
 app.configure(function(){
 //    app.use(express.logger());
@@ -33,7 +33,5 @@ ruze.configure(function(from){
 //        .expr('bodyAs("json")').to('console:out');
 });
 ruze.start(function(){
-//    ruze.print();
-    ruze.send('direct:a','hello')
 });
 
