@@ -1,37 +1,37 @@
-
 requirejs.config({
-    baseUrl:'/js',
-    paths:{
-        ruze:'ruze',
+    baseUrl:    '/js',
+    paths:      {
+        ruze:  'ruze',
         cutils:'ruze/cutils',
-        md5:'ruze/md5',
-        path:'ruze/path',
-        conf:'../conf'
+        md5:   'ruze/md5',
+        path:  'ruze/path',
+        conf:  '../conf'
     },
+    deps:       ['q', 'node-uuid', 'events', 'underscore', 'cutils', 'colors', 'exprjs', 'module', 'path', 'socket.io'],
     waitSeconds:0
 })
 
-requirejs(['ruze/ruze','jquery','text!conf/ruze.json','socket.io'], function(Ruze,$,json,io) {
+define(['require','ruze/ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], function (require) {
 
-    // todo - right now lazy loading and promises are driving me crazy, configuring with the options for preload
+    Ruze = require('ruze/ruze'), $ = require('jquery'), json = require('text!conf/ruze.json'), io = require('socket.io');
 
     var ruze = new Ruze({io:io, connect:{myserver:'http://localhost:4000/events'}});
 
-//    ruze.configure(json);
+    //    ruze.configure(json);
 
-    ruze.configure(function(){
+    ruze.configure(function () {
         ruze.from('dom:h1.project?on=click')
             .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
             .expr('in.body="event is " + in.body.type + ""')
-            .to('console:out')
-            .to('local:console:out');
+            .to('local:console:out')
+            .to('myserver:console:out');
 
-//        ruze.from('direct:a')
-//            .to('console:out')
+        //        ruze.from('direct:a')
+        //            .to('console:out')
 
     });
-    ruze.start(function(){
+    ruze.start(function () {
         $('.diagnostics').html(ruze.print());
     })
 
