@@ -1,7 +1,7 @@
 var express = require('express')
     , app = express()
     , http = require('http')
-    , io = require('socket.io').listen(app.listen(4000),{log:false})
+    , io = require('socket.io').listen(app.listen(4000),{log:true})
     , server = http.createServer(app);
 
 app.configure(function(){
