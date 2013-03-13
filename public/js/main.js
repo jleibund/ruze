@@ -23,6 +23,7 @@ requirejs(['ruze/ruze','jquery','text!conf/ruze.json','socket.io'], function(Ruz
         ruze.from('dom:h1.project?on=click')
             .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
+            .expr('in.body="event is " + in.body.type + ""')
             .to('local:console:out');
 
 //        ruze.from('direct:a')
