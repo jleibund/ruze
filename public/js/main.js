@@ -19,8 +19,8 @@ define(['require','ruze/ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], fu
 
     //    ruze.configure(json);
 
-    ruze.configure(function () {
-        ruze.from('dom:h1.project?on=click')
+    ruze.configure(function (from) {
+        from('dom:h1.project?on=click')
             .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
             .expr('in.body="event is " + in.body.type + ""')
