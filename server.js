@@ -7,14 +7,13 @@ var express = require('express')
 app.configure(function(){
 //    app.use(express.logger());
     app.use(express.static(__dirname + '/public'));
-    app.use('/js/ruze',express.static(__dirname + '/lib'));
+    app.use('/js',express.static(__dirname + '/lib'));
+    app.use('/js/extras',express.static(__dirname + '/extras/client'));
     app.use('/conf',express.static(__dirname + '/conf'));
 })
 
 var Ruze = require('./index.js');
 var ruze = new Ruze({preload:['process','expr'],listen:true, io:io.of('/events')});
-
-// expr('out.body= in.header.a')
 
 ruze.configure(function(from){
 //    ruze.from('console:in').expr('in.header.a="3"').to('direct:a');

@@ -1,21 +1,38 @@
 requirejs.config({
     baseUrl:    '/js',
     paths:      {
-        ruze:  'ruze',
-        cutils:'ruze/cutils',
-        md5:   'ruze/md5',
-        path:  'ruze/path',
         conf:  '../conf'
     },
-    deps:       ['q', 'node-uuid', 'events', 'underscore', 'cutils', 'colors', 'exprjs', 'module', 'path', 'socket.io'],
     waitSeconds:0
 })
 
-define(['require','ruze/ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], function (require) {
+//requirejs.config({
+//    enforceDefine:true,
+//    baseUrl:    '/js',
+//    paths:      {
+//        ruze:  'ruze',
+//        cutils:'ruze/cutils',
+//        md5:   'ruze/md5',
+//        path:  'ruze/path',
+//        conf:  '../conf'
+//    },
+//    deps:       ['q', 'node-uuid', 'events', 'underscore', 'cutils', 'colors', 'exprjs', 'module', 'path', 'socket.io'],
+//    waitSeconds:0
+//})
 
-    Ruze = require('ruze/ruze'), $ = require('jquery'), json = require('text!conf/ruze.json'), io = require('socket.io');
+
+//requirejs.onError = function(err){
+//    console.log('requirejs error:',err)
+//}
+
+
+define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], function (require) {
+
+    Ruze = require('ruze'), $ = require('jquery'), json = require('text!conf/ruze.json'), io = require('socket.io');
 
     var ruze = new Ruze({io:io, connect:{myserver:'http://localhost:4000/events'}});
+
+    ruze.loaders.local.addPath('extras')
 
     //    ruze.configure(json);
 
