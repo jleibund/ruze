@@ -33,12 +33,12 @@ OR copy files to your /public directory in /lib and /public:
 
 Ruze uses requirejs on both client and server.  It is configured with routes that you define in either Javascript or JSON:
 
-	ruze.configure(function(){
-          ruze.from('dom:h1.project?on=click')
+	ruze.configure(function(from){
+          from('dom:h1.project?on=click')
               .expr('in.header.timeStamp=in.body.timeStamp')
               .to('direct:a');
 
-          ruze.from('direct:a')
+          from('direct:a')
               .to('console:out')
  
      });
