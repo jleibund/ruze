@@ -15,6 +15,8 @@ app.configure(function(){
 var Ruze = require('./index.js');
 var ruze = new Ruze({preload:['process','expr'],listen:true, io:io.of('/events')});
 
+ruze.loaders.local.addPath('../extras/server')
+
 ruze.configure(function(from){
 //    ruze.from('console:in').expr('in.header.a="3"').to('direct:a');
 //    ruze.from('direct:a').expr('in.body= (in.header.a) ? in.header.a + " " + in.body : in.body').to('console:out');
