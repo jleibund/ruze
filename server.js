@@ -1,7 +1,7 @@
 var express = require('express')
     , app = express()
     , http = require('http')
-    , io = require('socket.io').listen(app.listen(4000),{log:true})
+    , io = require('socket.io').listen(app.listen(4000),{log:false})
     , server = http.createServer(app);
 
 app.configure(function(){
@@ -25,6 +25,13 @@ ruze.configure(function(from){
             console.log(ruze.print());
             next();
         })
+
+    from('direct:c').to('direct:e');
+
+    from('direct:e').process(function(e,next){
+        console.log(ruze.print());
+        next();
+    });
 //    ruze.from('direct:a')
 //        .process(function(exchange,next){
 //            console.log('process:  header contains-- ',exchange.in.header);

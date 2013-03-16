@@ -42,7 +42,11 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
             .to('myserver:direct:a')
             .expr('in.body="event is " + in.body.type + ""')
             .to('local:console:out')
-            .to('myserver:console:out');
+            .to('myserver:console:out')
+            .to('direct:c');
+
+        from('myserver:direct:d').to('myserver:direct:e')
+
 
         //        ruze.from('direct:a')
         //            .to('console:out')
