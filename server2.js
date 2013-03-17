@@ -2,7 +2,7 @@ var express = require('express')
     , app = express()
     , http = require('http')
     , io = require('socket.io-client')
-    , ioServer = require('socket.io').listen(app.listen(4000),{log:false}).of('/events')
+    , ioServer = require('socket.io').listen(app.listen(3000),{log:false}).of('/events')
     , httpServer = http.createServer(app);
 
 app.configure(function(){
@@ -14,7 +14,7 @@ app.configure(function(){
 })
 
 var Ruze = require('./index.js');
-var ruze = new Ruze({preload:['process','expr'],listen:ioServer, io:io, connect:{server2:'http://localhost:3000/events'}});
+var ruze = new Ruze({preload:['process','expr'],listen:ioServer});
 
 ruze.loaders.local.addPath('../extras/server')
 
@@ -27,12 +27,10 @@ ruze.configure(function(from){
             next();
         })
 
-//    from('local:direct:c').to('server2:direct:e');
-//
-//    from('direct:e').process(function(e,next){
-//        console.log(ruze.print());
-//        next();
-//    });
+    from('direct:e').process(function(e,next){
+        console.log(e);
+        next();
+    });
 //    ruze.from('direct:a')
 //        .process(function(exchange,next){
 //            console.log('process:  header contains-- ',exchange.in.header);
