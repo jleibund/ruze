@@ -238,7 +238,7 @@ We are adding a socket.io backplane across instances so that you can define the 
             .to('server2:direct:e');
     });
 		
-Where your client, server_a, server_b, and server_c run ruze with different roles, loaded plugins, etc.  There is an example of this now in the root directory.  To try it out follow these steps:
+Where your browser environment, 'myserver', and 'server2' run ruze with different roles, loaded plugins, etc.  There is an example of this now in the root directory.  To try it out follow these steps:
 
     // 1.  start myserver
     node server.js
@@ -246,8 +246,10 @@ Where your client, server_a, server_b, and server_c run ruze with different role
     // 2.  start server2
     node server2.js
 
-    // 3.  in a browser go to http://localhost:4000  when the environment has loaded, you will see the diagnostics appear on the page
+    // 3.  in a browser go to http://localhost:4000
+    //      when the environment has loaded, you will see the diagnostics appear on the page
 
-    // 4.  click on the sample text on the page, inspect the browser console and the two other server windows, you should see event routing as described in the route.
+    // 4.  click on the sample text on the page, inspect the browser console and the two other
+    //      server windows, you should see event routing as described in the route.
 
 We are currently working on next steps for this, foremost on deconstructing routes when clients disconnect from the environment.
