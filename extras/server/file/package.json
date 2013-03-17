@@ -8,6 +8,7 @@
         "amdefine" : "latest",
         "nodewatch":"latest"
     },
+    "main" : "file",
     "devDependencies":{
         "mocha":"latest",
         "should":"latest",
