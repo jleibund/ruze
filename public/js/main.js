@@ -6,26 +6,6 @@ requirejs.config({
     waitSeconds:0
 })
 
-//requirejs.config({
-//    enforceDefine:true,
-//    baseUrl:    '/js',
-//    paths:      {
-//        ruze:  'ruze',
-//        cutils:'ruze/cutils',
-//        md5:   'ruze/md5',
-//        path:  'ruze/path',
-//        conf:  '../conf'
-//    },
-//    deps:       ['q', 'node-uuid', 'events', 'underscore', 'cutils', 'colors', 'exprjs', 'module', 'path', 'socket.io'],
-//    waitSeconds:0
-//})
-
-
-//requirejs.onError = function(err){
-//    console.log('requirejs error:',err)
-//}
-
-
 define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], function (require) {
 
     Ruze = require('ruze'), $ = require('jquery'), json = require('text!conf/ruze.json'), io = require('socket.io');
@@ -44,15 +24,6 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
             .to('local:console:out')
             .to('myserver:console:out')
             .to('server2:direct:e');
-//            .to('direct:c');
-
-//        from('server2:direct:e').to('local:console:out');
-
-//        from('myserver:direct:d').to('server2:direct:e')
-
-
-        //        ruze.from('direct:a')
-        //            .to('console:out')
 
     });
     ruze.start(function () {
