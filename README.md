@@ -192,7 +192,16 @@ The basic set of plugins are:
 	process
 	when
 	
-We will expand this library over time.
+We will expand this library over time in the /extras directory for you to pick from, for example
+
+    /extras/server/file
+    /extras/client/dom
+
+These will be organized by plugins that work only on the server, only on the client, or both.  You can add new directories to scan for plugins like so
+
+    ruze.loaders.local.addPath('extras')
+
+This could be a directory of your own plugin components.  This works in both the nodejs and server environment.
 
 ##Testing
 
@@ -215,16 +224,30 @@ We will expand this library over time.
 Ruze supports a testing structure using an endpoint called mock.
 
 ##Remoting
-As mentioned, one ultimate goal of this project is to allow you to define routes across a distributed architecture of ruze nodes.  This is a work in progress so this section is about what to expect shortly.
+One ultimate goal of this project is to allow you to define routes across a distributed architecture of ruze nodes.  This is a work in progress so this section is about what to expect shortly.
 
-We plan to add a socket.io backplane across instances so that you can define the following:
+We are adding a socket.io backplane across instances so that you can define the following:
 
-	ruze.from('local:dom:h1.click')
-		.to('server_a:do:something')
-		.expr('…') 
-		.to('server_a:do:something_else')
-		.tap('server_b:log:transactions')
-		.to('index:allfiles')
-		.to('server_a:run:something')
+    ruze.configure(function (from) {
+        from('dom:h1.project?on=click')
+            .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
+            .to('myserver:direct:a')
+            .expr('in.body="event is " + in.body.type + ""')
+            .to('local:console:out')
+            .to('myserver:console:out')
+            .to('server2:direct:e');
+    });
 		
-Where your client, server_a, server_b, and server_c run ruze with different roles, loaded plugins, etc.  As described above, the "index:allfiles" step would dynamically locate a server that supports this capability (on servers 'a', 'b' or 'c' but maybe you also have 'd'?).  More details on that as the project progresses.
+Where your client, server_a, server_b, and server_c run ruze with different roles, loaded plugins, etc.  There is an example of this now in the root directory.  To try it out follow these steps:
+
+    // 1.  start myserver
+    node server.js
+
+    // 2.  start server2
+    node server2.js
+
+    // 3.  in a browser go to http://localhost:4000  when the environment has loaded, you will see the diagnostics appear on the page
+
+    // 4.  click on the sample text on the page, inspect the browser console and the two other server windows, you should see event routing as described in the route.
+
+We are currently working on next steps for this, foremost on deconstructing routes when clients disconnect from the environment.
