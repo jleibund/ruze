@@ -21,9 +21,11 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
             .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
             .expr('in.body="event is " + in.body.type + ""')
+
             .to('local:console:out')
             .to('myserver:console:out')
-            .to('server2:direct:e');
+            .to('server2:direct:e')
+            .to('local:console:out');
 
     });
     ruze.start(function () {
