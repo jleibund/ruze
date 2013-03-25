@@ -24,7 +24,10 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
 
             .to('local:console:out')
             .to('myserver:console:out')
-            .to('server2:direct:e')
+//            .to('server2:console:out')
+//            .to('server2:direct:e')
+            .to('myserver:console:out')
+            .to('myserver:direct:e')
             .to('local:console:out');
 
     });
