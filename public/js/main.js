@@ -21,6 +21,7 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
             .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
             .expr('in.body="event is " + in.body.type + ""')
+            .expr('properties.broadcast = true')
 
             .to('local:console:out')
             .to('myserver:console:out')
