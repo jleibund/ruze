@@ -20,6 +20,7 @@ module.exports.setUp = function(done){
                     next();
                 })
                 .expr('bodyAs("json")')
+                .to('console:log')
                 .to('mock:out');
         });
         ruze.start(function(){

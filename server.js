@@ -25,6 +25,8 @@ ruze.configure(function(from){
             console.log(ruze.print());
             next();
         })
+
+    from('direct:a').to('direct:b');
 });
 
 ruze.start();

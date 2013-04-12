@@ -20,14 +20,15 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
         from('dom:h1.project?on=click')
             .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
             .to('myserver:direct:a')
-            .expr('in.body="event is " + in.body.type + ""')
-            .expr('properties.broadcast = true')
+//            .expr('in.body="event is " + in.body.type + ""')
+//            .expr('properties.broadcast = true')
 
+        from ('myserver:direct:b')
+            .to('myserver:direct:c')
             .to('local:console:out')
             .to('myserver:console:out')
 //            .to('server2:console:out')
 //            .to('server2:direct:e')
-            .to('myserver:console:out')
             .to('myserver:direct:e')
             .to('local:console:out');
 
