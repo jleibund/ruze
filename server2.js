@@ -26,7 +26,7 @@ ruze.configure(function(from){
         })
 
     from('direct:e').process(function(e,next){
-        e.in.body='myserver2';
+        e.out.body='myserver2';
         console.log('blah');
         next(null,e);
     }).to('direct:f');
