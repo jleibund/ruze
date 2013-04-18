@@ -14,7 +14,7 @@ app.configure(function(){
 })
 
 var Ruze = require('./index.js');
-var ruze = new Ruze({preload:['process','expr'],listen:ioServer});
+var ruze = new Ruze({preload:['process','expr'],debug:true,listen:ioServer});
 
 ruze.loaders.local.addPath('../extras/server')
 

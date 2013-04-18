@@ -10,7 +10,7 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
 
     Ruze = require('ruze'), $ = require('jquery'), json = require('text!conf/ruze.json'), io = require('socket.io');
 
-    var ruze = new Ruze({io:io, connect:{myserver:'http://localhost:4000/events'}});
+    var ruze = new Ruze({io:io, debug:true, connect:{myserver:'http://localhost:4000/events'}});
 
     ruze.loaders.local.addPath('extras')
 
@@ -30,9 +30,9 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
             .to('server2:direct:e')
 
         from ('server2:direct:f')
-            .to('myserver:direct:g');
-
-        from('myserver:direct:g')
+            .to('myserver:direct:g')
+//
+//        from('myserver:direct:g')
             .to('local:console:out');
 
     });
