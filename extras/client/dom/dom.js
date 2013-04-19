@@ -14,11 +14,14 @@ define(['jquery'], function($) {
         var ruze = this.ruze;
         var ep = this.endpoint;
 
-        $(ep.object).on(ep.args['on'], function(event){
-            var exchange = ruze.newExchange();
-            exchange.out.body = event;
-            cb(null,exchange);
-        });
+        if (!this.bound){
+            $(ep.object).on(ep.args['on'], function(event){
+                var exchange = ruze.newExchange();
+                exchange.out.body = event;
+                cb(null,exchange);
+            });
+            this.bound = true;
+        }
     };
 
     return DomComponent;
