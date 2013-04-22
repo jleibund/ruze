@@ -23,6 +23,11 @@ define(['jquery'], function($) {
             this.bound = true;
         }
     };
+    DomComponent.prototype.finalize = function(cb){
+        var ep = this.endpoint;
+        $(ep.object).off(ep.args['on']);
+        cb();
+    }
 
     return DomComponent;
 });
