@@ -30,9 +30,10 @@ define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], functio
             .to('server2:direct:e')
 
         from ('server2:direct:f')
-            .to('myserver:direct:g')
-//
-//        from('myserver:direct:g')
+            .to('myserver:console:out')
+            .to('myserver:direct:g');
+
+        from('myserver:direct:g')
             .to('local:console:out');
 
     });
