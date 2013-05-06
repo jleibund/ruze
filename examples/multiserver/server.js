@@ -8,16 +8,16 @@ var express = require('express')
 app.configure(function(){
 //    app.use(express.logger());
     app.use(express.static(__dirname + '/public'));
-    app.use('/js',express.static(__dirname + '/lib'));
-    app.use('/js/extras',express.static(__dirname + '/extras/client'));
+    app.use('/js',express.static(__dirname + '/../../lib'));
+    app.use('/js',express.static(__dirname + '/../../public/js'));
+    app.use('/js/extras',express.static(__dirname + '/../../extras/client'));
     app.use('/conf',express.static(__dirname + '/conf'));
 })
 
-var Ruze = require('./index.js');
-//var ruze = new Ruze({preload:['process','expr'],listen:ioServer});
+var Ruze = require('../../index.js');
 var ruze = new Ruze({preload:['process','expr'],debug:true,listen:ioServer, io:io, connect:{server2:'http://localhost:3000/events'}});
 
-ruze.loaders.local.addPath('../extras/server')
+ruze.loaders.local.addPath('../../../extras/server')
 
 ruze.configure(function(from){
     from('console:in')
