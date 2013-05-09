@@ -1,6 +1,8 @@
-if (typeof define !== 'function') { var define = require('amdefine')(module) }
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
 
-define(function(require) {
+define(['require','fs','nodewatch'],function(require) {
 
     var fs = require('fs'),
         watch = require('nodewatch');
@@ -8,9 +10,9 @@ define(function(require) {
 
     var FileComponent = function(){
     };
-    FileComponent.prototype.initialize = function(options,ctx){
-        this.endpoint = options.object;
-        this.ctx = ctx;
+    FileComponent.prototype.initialize = function(endpoint,ruze){
+        this.endpoint = endpoint;
+        this.ruze = ruze;
     }
     FileComponent.prototype.consume = function(cb){
         this.consumeCb = cb;
@@ -38,7 +40,7 @@ define(function(require) {
             var tokens = file.split('/');
 
             if (tokens[tokens.length-1].charAt(0) != '.' && action == 'new' || action == 'change'){
-                var exchange = this.ctx.newExchange();
+                var exchange = this.ruze.newExchange();
                 exchange.out.header.filename = file;
 
                 console.log('uid',exchange.uid)

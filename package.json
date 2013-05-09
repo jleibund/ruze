@@ -10,7 +10,6 @@
         "socket.io-client" : "latest",
         "q":"latest",
         "jquery":"latest",
-        "express":"latest",
         "requirejs":"latest",
         "exprjs":"latest",
         "colors":"latest"
@@ -18,6 +17,7 @@
     "main":"lib/ruze",
     "devDependencies":{
         "nodeunit":"latest",
+        "express":"latest",
         "should":"latest"
     },
     "jam":{
