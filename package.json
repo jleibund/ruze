@@ -5,6 +5,7 @@
     "dependencies":{
         "amdefine":"latest",
         "node-uuid":"latest",
+        "nodewatch":"latest",
         "underscore":"latest",
         "socket.io" : "latest",
         "socket.io-client" : "latest",

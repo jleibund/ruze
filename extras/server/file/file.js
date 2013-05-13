@@ -1,12 +1,20 @@
 if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
-
-define(['require','fs','nodewatch'],function(require) {
+var internalReq = require.config({
+    baseUrl:'/',
+    context:'file',
+    nodeRequire:require
+})
+internalReq(['require','fs','nodewatch','path','module'],function(require) {
 
     var fs = require('fs'),
         watch = require('nodewatch');
 
+    var m = require('module'),
+        path = require('path');
+
+    var sep = path && path.sep || '/';
 
     var FileComponent = function(){
     };
@@ -16,10 +24,10 @@ define(['require','fs','nodewatch'],function(require) {
     }
     FileComponent.prototype.consume = function(cb){
         this.consumeCb = cb;
-        var self = this;
+        var self = this, ruze = this.ruze;
 
         // get any overrides from header
-        var dir = this.endpoint;
+        var dir = this.endpoint.object;
 
         fs.exists(dir, function(exists){
             if (!exists) throw Error('no such dir '+dir)
@@ -37,16 +45,15 @@ define(['require','fs','nodewatch'],function(require) {
         // make a processed dir
 
         watch.add(dir).onChange(function(file,prev,curr,action){
-            var tokens = file.split('/');
+            var tokens = file.split(sep);
 
             if (tokens[tokens.length-1].charAt(0) != '.' && action == 'new' || action == 'change'){
-                var exchange = this.ruze.newExchange();
-                exchange.out.header.filename = file;
+                var exchange = ruze.newExchange();
+                exchange.out.header.filename = tokens[tokens.length-1];
 
-                console.log('uid',exchange.uid)
+                console.log('id',exchange.id)
 
                 fs.readFile(file, function(err,data){
-
                     exchange.out.body = data;
                     self.consumeCb(err,exchange);
                 });
@@ -57,23 +64,32 @@ define(['require','fs','nodewatch'],function(require) {
     };
     FileComponent.prototype.produce = function(exchange, cb){
 
-        var file = this.endpoint;
-        if (exchange.in.header.filename)
-            file = exchange.in.header.filename;
+        var dir = this.endpoint.object, isDir = true, file = null;
+        if (!dir) dir = '.';
 
-        if (!file) file = '.';
+        if (exchange.in.header.filename){
+            file = dir + sep + exchange.in.header.filename;
+            isDir = false;
+        } else {
+            var ext = (exchange.in.header.extension) ? exchange.in.header.extension : 'out'
+            file = dir + sep + exchange.id + '.' + ext;
+        }
 
-        fs.stat(file, function(err, stats){
-            if (err) throw err;
-            if (stats.isDirectory()){
-                var ext = (exchange.in.header.extension) ? exchange.in.header.extension : 'out'
-
-                file = file + '/' + exchange.id + '.' + ext;
+        fs.exists(dir, function(exists){
+            if (!exists) {
+                fs.mkdir(dir, function(err2){
+                    if (err2) throw err2;
+                    fs.writeFile(file, exchange.in.body, function(err){
+                        exchange.out = exchange.in;
+                        cb(err,exchange);
+                    });
+                });
+            } else {
+                fs.writeFile(file, exchange.in.body, function(err){
+                    exchange.out = exchange.in;
+                    cb(err,exchange);
+                });
             }
-            fs.writeFile(file, exchange.in.body, function(err){
-                cb(err,exchange);
-            });
-
         })
     }
     return FileComponent;
