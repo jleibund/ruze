@@ -1,12 +1,14 @@
 if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
-var internalReq = require.config({
-    baseUrl:'/',
-    context:'file',
-    nodeRequire:require
-})
-internalReq(['require','fs','nodewatch','path','module'],function(require) {
+
+//define(['require'],function(mylocalrequire) {
+define(function(){
+
+//    mylocalrequire(['fs','./nodewatch','path','module'],function(fs, watch, m, path) {
+//
+//        var sep = path && path.sep || '/';
+//    });
 
     var fs = require('fs'),
         watch = require('nodewatch');

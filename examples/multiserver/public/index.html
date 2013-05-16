@@ -6,6 +6,26 @@
              scripts/main.js after requirejs.js loads. -->
         <!--<script src="js/q.js"></script>-->
         <script data-main="js/main" src="js/jam/require.js"></script>
+        <script>
+
+            requirejs.config({
+                baseUrl:    '/js',
+                paths: {
+                    conf:  '../conf'
+//                    cutils: './cutils',
+//                    remotecomponent: './remotecomponent',
+//                    localloader: './localloader',
+//                    remoteloader:'./remoteloader',
+//                    path: './path'
+                },
+                waitSeconds: 0
+            })
+
+            requirejs.onError = function (err) {
+//                console.log('requirejs error-- type:', err.requireType, 'modules:',err.requireModules, 'message:', err.message)
+                console.log(err)
+            }
+        </script>
     </head>
     <body>
         <h1 class="project">My Sample Project</h1>

@@ -15,7 +15,6 @@ var express = require('express')
 var Ruze = require('../../index.js');
 var ruze = new Ruze({preload:['process','expr'],debug:true,listen:ioServer});
 
-ruze.loaders.local.addPath('../extras/server')
 
 ruze.configure(function(from){
     from('console:in')

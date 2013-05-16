@@ -5,13 +5,11 @@
     "dependencies":{
         "amdefine":"latest",
         "node-uuid":"latest",
-        "nodewatch":"latest",
         "underscore":"latest",
         "socket.io" : "latest",
         "socket.io-client" : "latest",
         "q":"latest",
         "jquery":"latest",
-        "requirejs":"latest",
         "exprjs":"latest",
         "colors":"latest"
     },

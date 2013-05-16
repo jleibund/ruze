@@ -1,18 +1,9 @@
-requirejs.config({
-    baseUrl:    '/js',
-    paths:      {
-        conf:  '../conf'
-    },
-    waitSeconds:0
-})
 
 define(['require','ruze', 'jquery', 'text!conf/ruze.json', 'socket.io'], function (require) {
 
     Ruze = require('ruze'), $ = require('jquery'), json = require('text!conf/ruze.json'), io = require('socket.io');
 
     var ruze = new Ruze({io:io, debug:true, connect:{myserver:'http://localhost:4000/events'}});
-
-    ruze.loaders.local.addPath('extras')
 
     //    ruze.configure(json);
 

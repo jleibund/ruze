@@ -1,8 +1,1 @@
-var requirejs = require('requirejs');
-requirejs.config({
-    nodeRequire:require,
-    baseUrl:__dirname+'/lib'
-
-})
-
-module.exports = requirejs('ruze')
+module.exports = require('./lib/ruze');
