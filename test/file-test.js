@@ -9,24 +9,8 @@ module.exports.setUp = function(done){
     if (!ruze){
         ruze = new Ruze({debug:true});
 
-        // defaults and plugins
-//        ruze.loaders.local.addPath('./../extras/server');
-
-//        ruze.add('file','../extras/server')
-//        ruze.add('plugin1','../extras/server')
-//        ruze.add('plugin2','../extras/server')
-
-        // todo:  this should happen by default
-//        ruze.add('../extras/server', ['file','plugin','plugin2']);
-//        ruze.add('../your/custom/stuff', ['plugin3']);
-//
-//        1)  absolute
-//        2)  fallback
-//        3)  write a server bind to express, fancy logic, etc
-//        4)  all plugins in one place...  ruze has default plugi-- you must put your custom stuff into that dir
-
         ruze.configure(function(from){
-            from('file:/Users/jpleibundguth/dev/ruze/test/in')
+            from('file:/Users/jpleibundguth/dev/ruze/test/in?once=true')
                 .to('console:log')
                 .to('file:/Users/jpleibundguth/dev/ruze/test/out')
                 .to('mock:out');

@@ -6,7 +6,7 @@
     "dependencies":{
         "underscore":"latest",
         "amdefine" : "latest",
-        "nodewatch":"latest"
+        "chokidar":"latest"
     },
     "main" : "file",
     "devDependencies":{
