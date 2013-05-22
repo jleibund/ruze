@@ -2,19 +2,11 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-//define(['require'],function(mylocalrequire) {
 define(function(){
 
-//    mylocalrequire(['fs','./nodewatch','path','module'],function(fs, watch, m, path) {
-//
-//        var sep = path && path.sep || '/';
-//    });
 
     var fs = require('fs'),
         chokidar = require('chokidar');
-//    watch = require('nodewatch');
-
-
 
     var m = require('module'),
         path = require('path');
@@ -34,14 +26,15 @@ define(function(){
             ignorePermissionErrors : endpoint.args.ignorePermissionErrors || false,
             ignoreInitial : endpoint.args.ignoreInitial || false,
             interval : endpoint.args.interval ||  100,
-            binaryInterval : endpoint.args.binaryInterval || 300
+            binaryInterval : endpoint.args.binaryInterval || 300,
+            archive: endpoint.args.archive || false
         }
         this.ruze = ruze;
     };
     FileComponent.prototype.finalize = function (cb) {
         if (this.watcher){
             this.watcher.close();
-            delete this.watcher;
+            this.watcher = null;
         }
     }
     FileComponent.prototype.consume = function(cb){
@@ -50,7 +43,11 @@ define(function(){
 
         if (!this.watcher){
 
-            var setup = function(dir, config){
+            var dir = this.dir;
+            var dirRuze = this.ruzeDir;
+            var config = this.config;
+
+            var setup = function(){
                 var watcher = self.watcher = chokidar.watch(dir, config);
                 var once = self.once;
                 var handler = function(path){
@@ -61,40 +58,64 @@ define(function(){
 
                     fs.readFile(path, function(err,data){
                         exchange.out.body = data;
-                        fs.rename(path, dirRuze + sep + file, function(err){
-                            if (err) throw err;
-//                            console.log('id',exchange.id, file)
+                        if (config.archive){
+                            fs.rename(path, dirRuze + sep + file, function(err){
+                                if (err) throw err;
+                                self.consumeCb(err,exchange);
+
+                                if (once && watcher){
+                                    watcher.close();
+                                    watcher = self.watcher = null;
+                                }
+                            });
+                        } else {
                             self.consumeCb(err,exchange);
 
-                            if (once){
+                            if (once && watcher){
                                 watcher.close();
                                 watcher = self.watcher = null;
                             }
-                        });
+                        }
                     });
                 };
-                watcher.on('change', handler);
+                watcher.on('add', handler);
+
+                //todo should be change
+                //watcher.on('change', handler);
             };
 
-            var dir = this.dir;
-            var dirRuze = this.ruzeDir;
-            var config = this.config;
-            fs.exists(dir, function(exists){
-                if (!exists) throw Error('no such dir '+dir)
+
+            var existsSub = function(){
                 fs.exists(dirRuze, function(exists2){
                     if (!exists2){
                         fs.mkdir(dirRuze, function(err2){
                             if (err2) throw err2;
-                            setup(dir,config);
+                            setup();
                         });
                     } else {
-                        setup(dir,config);
+                        setup();
                     }
                 })
-
+            }
+            fs.exists(dir, function(exists){
+                if (!exists) {
+                    fs.mkdir(dir, function(err){
+                        if (err) throw err;
+                        if (config.archive){
+                            existsSub();
+                        } else {
+                            setup();
+                        }
+                    })
+                } else {
+                    if (config.archive){
+                        existsSub();
+                    } else {
+                        setup();
+                    }
+                }
             })
-
-        }
+        };
 
     };
     FileComponent.prototype.produce = function(exchange, cb){
