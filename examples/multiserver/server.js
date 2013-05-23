@@ -16,7 +16,7 @@ app.configure(function(){
 })
 
 var Ruze = require('../../index.js');
-var ruze = new Ruze({preload:['process','expr'],debug:true,listen:ioServer, io:io, connect:{server2:'http://localhost:3000/events'}});
+var ruze = new Ruze({debug:true,listen:ioServer, io:io, connect:{server2:'http://localhost:3000/events'}});
 
 
 ruze.configure(function(from){

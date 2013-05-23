@@ -5,15 +5,8 @@ var express = require('express')
     , ioServer = require('socket.io').listen(app.listen(3000),{log:false}).of('/events')
     , httpServer = http.createServer(app);
 
-//app.configure(function(){
-//    app.use(express.static(__dirname + '/public'));
-//    app.use('/js',express.static(__dirname + '../../lib'));
-//    app.use('/js/extras',express.static(__dirname + '../../extras/client'));
-//    app.use('/conf',express.static(__dirname + '/conf'));
-//})
-
 var Ruze = require('../../index.js');
-var ruze = new Ruze({preload:['process','expr'],debug:true,listen:ioServer});
+var ruze = new Ruze({debug:true,listen:ioServer});
 
 
 ruze.configure(function(from){
@@ -27,7 +20,9 @@ ruze.configure(function(from){
         e.out.body='myserver2';
         console.log('blah');
         next(null,e);
-    }).to('direct:f');
+    })
+    .to('file:/Users/jpleibundguth/dev/ruze/examples/multiserver/out')
+    .to('direct:f');
 });
 ruze.start(function(){
 });
