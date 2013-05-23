@@ -11,6 +11,7 @@ module.exports.setUp = function(done){
 
         ruze.configure(function(from){
             from('file:/Users/jpleibundguth/dev/ruze/test/in?once=true&archive=true')
+                .expr('out.body=in.body.toString()')
                 .to('console:log')
                 .to('file:/Users/jpleibundguth/dev/ruze/test/out')
                 .to('mock:out');

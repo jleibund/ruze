@@ -21,7 +21,7 @@ define(function(){
         this.ruzeDir = this.dir + '/.ruze';
         this.once = endpoint.args.once || false;
         this.config = {
-            ignored : endpoint.args.ignored || /^.ruze/,
+            ignored : endpoint.args.ignored || /.*\/\.ruze\/.*/,
             persistent : endpoint.args.persistent || true,
             ignorePermissionErrors : endpoint.args.ignorePermissionErrors || false,
             ignoreInitial : endpoint.args.ignoreInitial || false,
@@ -64,7 +64,8 @@ define(function(){
                                 self.consumeCb(err,exchange);
 
                                 if (once && watcher){
-                                    watcher.close();
+                                    self.watcher.close();
+                                    delete self.watcher;
                                     watcher = self.watcher = null;
                                 }
                             });
@@ -72,12 +73,16 @@ define(function(){
                             self.consumeCb(err,exchange);
 
                             if (once && watcher){
-                                watcher.close();
+                                self.watcher.close();
+                                delete self.watcher;
                                 watcher = self.watcher = null;
                             }
                         }
                     });
                 };
+                watcher.on('all',function(event,stats) {
+                    console.log('chokidar', event, stats);
+                });
                 watcher.on('add', handler);
 
                 //todo should be change
