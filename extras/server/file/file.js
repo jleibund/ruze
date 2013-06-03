@@ -4,9 +4,11 @@ if (typeof define !== 'function') {
 
 define(function(){
 
-
     var fs = require('fs'),
-        chokidar = require('chokidar');
+        chokidar = require('chokidar'),
+        readline = require('readline'),
+        lazy = require('lazy'),
+        uuid = require('node-uuid');
 
     var m = require('module'),
         path = require('path');
@@ -52,33 +54,154 @@ define(function(){
                 var once = self.once;
                 var handler = function(path){
                     var tokens = path.split(sep);
+                    var file =  tokens[tokens.length-1];
+//                    var file = exchange.out.header.filename = tokens[tokens.length-1];
 
-                    var exchange = ruze.newExchange();
-                    var file = exchange.out.header.filename = tokens[tokens.length-1];
+//                    var exchange = ruze.newExchange();
+//                    var file = exchange.out.header.filename = tokens[tokens.length-1];
 
-                    fs.readFile(path, function(err,data){
-                        exchange.out.body = data;
-                        if (config.archive){
-                            fs.rename(path, dirRuze + sep + file, function(err){
-                                if (err) throw err;
-                                self.consumeCb(err,exchange);
-
-                                if (once && watcher){
-                                    self.watcher.close();
-                                    delete self.watcher;
-                                    watcher = self.watcher = null;
-                                }
-                            });
-                        } else {
-                            self.consumeCb(err,exchange);
-
-                            if (once && watcher){
-                                self.watcher.close();
-                                delete self.watcher;
-                                watcher = self.watcher = null;
-                            }
-                        }
+                    var rd = readline.createInterface({
+                        input: fs.createReadStream(path),
+                        output: process.stdout,
+                        terminal: false
                     });
+
+                    var aggregateId = uuid.v4();
+                    var lineNum = 0, end = -1;
+
+                    new lazy(fs.createReadStream(path))
+                        .on('end', function() {
+                            end = lineNum;
+                        } )
+                        .lines
+                        .forEach(function(line){
+                            var ex = ruze.newExchange();
+//                        var file = ex.out.header.filename = tokens[tokens.length-1];
+                            console.log(line);
+//                        var ex = cutils.clone(exchange);
+                            ex.out.header.aggregateId = aggregateId;
+                            ex.out.header.index = lineNum;
+                            var complete = ex.out.header.complete = (end == lineNum);
+                            ex.out.body = line;
+                            ex.id = uuid.v4();
+                            lineNum++;
+                            cb(null, ex);
+
+                            if (complete){
+                                if (config.archive){
+                                    fs.rename(path, dirRuze + sep + file, function(err){
+                                        if (err) throw err;
+//                                        var ex = ruze.newExchange();
+//                                        ex.out.header.aggregateId = aggregateId;
+//                                        ex.out.header.index = lineNum;
+//                                        ex.out.header.complete= true;
+//                                        ex.id = uuid.v4();
+//                                        cb(err, ex);
+
+                                        if (once && watcher){
+                                            self.watcher.close();
+                                            delete self.watcher;
+                                            watcher = self.watcher = null;
+                                        }
+                                    });
+                                } else {
+//                            self.consumeCb(err,exchange);
+//                                    var ex = ruze.newExchange();
+//                                    ex.out.header.aggregateId = aggregateId;
+//                                    ex.out.header.index = lineNum;
+//                                    ex.out.header.complete= true;
+//                                    ex.id = uuid.v4();
+//                                    cb(null, ex);
+
+                                    if (once && watcher){
+                                        self.watcher.close();
+                                        delete self.watcher;
+                                        watcher = self.watcher = null;
+                                    }
+                                }
+
+                            }
+
+                        }
+                    );
+
+//                    .addListener('close', function(){
+//
+//                    })
+
+
+//                    rd.on('line', function(line) {
+//                        var ex = ruze.newExchange();
+////                        var file = ex.out.header.filename = tokens[tokens.length-1];
+//                        console.log(line);
+////                        var ex = cutils.clone(exchange);
+//                        ex.out.header.aggregateId = aggregateId;
+//                        ex.out.header.index = lineNum++;
+//                        ex.out.body = line;
+//                        ex.id = uuid.v4();
+//                        cb(null, ex);
+//
+//                    });
+//
+//                    rd.on('close', function(line) {
+//                        console.log(line);
+//                        if (config.archive){
+//                            fs.rename(path, dirRuze + sep + file, function(err){
+//                                if (err) throw err;
+////                                self.consumeCb(err,exchange);
+//                                var ex = ruze.newExchange();
+//                                ex.out.header.aggregateId = aggregateId;
+//                                ex.out.header.index = lineNum;
+//                                ex.out.header.complete= true;
+//                                ex.id = uuid.v4();
+//                                cb(err, ex);
+//
+//                                if (once && watcher){
+//                                    self.watcher.close();
+//                                    delete self.watcher;
+//                                    watcher = self.watcher = null;
+//                                }
+//                            });
+//                        } else {
+////                            self.consumeCb(err,exchange);
+//                            var ex = ruze.newExchange();
+//                            ex.out.header.aggregateId = aggregateId;
+//                            ex.out.header.index = lineNum;
+//                            ex.out.header.complete= true;
+//                            ex.id = uuid.v4();
+//                            cb(null, ex);
+//
+//                            if (once && watcher){
+//                                self.watcher.close();
+//                                delete self.watcher;
+//                                watcher = self.watcher = null;
+//                            }
+//                        }
+//                    });
+
+//                    fs.readFile(path, function(err,data){
+//                        exchange.out.body = data;
+//                        if (config.archive){
+//                            fs.rename(path, dirRuze + sep + file, function(err){
+//                                if (err) throw err;
+//                                self.consumeCb(err,exchange);
+//
+//                                if (once && watcher){
+//                                    self.watcher.close();
+//                                    delete self.watcher;
+//                                    watcher = self.watcher = null;
+//                                }
+//                            });
+//                        } else {
+//                            self.consumeCb(err,exchange);
+//
+//                            if (once && watcher){
+//                                self.watcher.close();
+//                                delete self.watcher;
+//                                watcher = self.watcher = null;
+//                            }
+//                        }
+//                    });
                 };
                 watcher.on('all',function(event,stats) {
                     console.log('chokidar', event, stats);
@@ -136,22 +259,27 @@ define(function(){
             file = dir + sep + exchange.id + '.' + ext;
         }
 
-        fs.exists(dir, function(exists){
-            if (!exists) {
-                fs.mkdir(dir, function(err2){
-                    if (err2) throw err2;
+        if (!fs.existsSync(dir))
+            fs.mkdirSync(dir);
+//        var exists = fs.existsSync(dir);
+//        if (!exists){}
+
+//        fs.exists(dir, function(exists){
+//            if (!exists) {
+//                fs.mkdir(dir, function(err2){
+//                    if (err2) throw err2;
                     fs.writeFile(file, exchange.in.body, function(err){
                         exchange.out = exchange.in;
                         cb(err,exchange);
                     });
-                });
-            } else {
-                fs.writeFile(file, exchange.in.body, function(err){
-                    exchange.out = exchange.in;
-                    cb(err,exchange);
-                });
-            }
-        })
+//                });
+//            } else {
+//                fs.writeFile(file, exchange.in.body, function(err){
+//                    exchange.out = exchange.in;
+//                    cb(err,exchange);
+//                });
+//            }
+//        })
     }
     return FileComponent;
 

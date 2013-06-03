@@ -13,6 +13,7 @@ module.exports.setUp = function(done){
             from('file:/Users/jpleibundguth/dev/ruze/test/in?once=true&archive=true')
                 .expr('out.body=in.body.toString()')
                 .to('console:log')
+                .aggregate({completionFromBatchConsumer:true})
                 .to('file:/Users/jpleibundguth/dev/ruze/test/out')
                 .to('mock:out');
         });
