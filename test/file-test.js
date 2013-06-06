@@ -10,11 +10,11 @@ module.exports.setUp = function(done){
         ruze = new Ruze({debug:true});
 
         ruze.configure(function(from){
-            from('file:/Users/jpleibundguth/dev/ruze/test/in?once=true&archive=true')
-                .expr('out.body=in.body.toString()')
+            from('file:/Users/jpleibundguth/dev/ruze/test/in?once=true&archive=true&mode=line&buffer=true')
+//                .expr('out.body=in.body.toString()')
                 .to('console:log')
                 .aggregate({completionFromBatchConsumer:true})
-                .to('file:/Users/jpleibundguth/dev/ruze/test/out')
+                .to('file:/Users/jpleibundguth/dev/ruze/test/out?mode=stream')
                 .to('mock:out');
         });
         ruze.start(function(){

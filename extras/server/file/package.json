@@ -6,7 +6,9 @@
     "dependencies":{
         "underscore":"latest",
         "amdefine" : "latest",
-        "chokidar":"latest"
+        "chokidar":"latest",
+        "readline":"latest",
+        "bops":"latest"
     },
     "main" : "file",
     "devDependencies":{
