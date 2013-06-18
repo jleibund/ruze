@@ -12,8 +12,7 @@ module.exports.setUp = function(done){
                 .to('mock:out');
         });
         ruze.start(function(){
-
-            //console.log(ruze.print());
+            console.log(ruze.print())
             done()
         });
     } else {

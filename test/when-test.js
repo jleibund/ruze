@@ -1,5 +1,6 @@
 
-var Ruze =  require('../index.js');
+var Ruze =  require('../index.js'), _ = require('underscore');
+
 var ruze;
 
 module.exports.setUp = function(done){
@@ -8,51 +9,57 @@ module.exports.setUp = function(done){
         ruze = new Ruze();
         ruze.configure(function(from){
             from('direct:a')
-                .split('in.body','\n')
-                .to('console:log')
-                .to('mock:out');
+                .when('in.body=="3"')
+                    .expr('out.body = "OK"')
+                    .to('direct:b')
+//                .when('in.body=="2"')
+//                    .expr('out.body = "MAYBE"')
+//                    .to('direct:b')
+//                .otherwise()
+//                    .expr('out.body = "MAYBE NOT"')
+//                    .to('direct:b');
 
             from('direct:b')
-                .split('in.body')
                 .to('console:log')
                 .to('mock:out');
-
         });
         ruze.start(function(){
             console.log(ruze.print())
-            done()
+            done();
         });
     } else {
         done();
     }
 
 }
-module.exports.testSplitString = function(done){
+module.exports.testOK = function(done){
     ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        ruze.send('direct:a', 'hello\nworld\n');
+        ruze.send('direct:a', '3');
         mockEnd.assert();
     }).then(function(){
             done.done()
         }).done();
 }
 
-module.exports.testSplitArray = function(done){
+module.exports.testMaybe = function(done){
     ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        ruze.send('direct:b', ['goodbye','world']);
+        ruze.send('direct:a', '2');
         mockEnd.assert();
     }).then(function(){
             done.done()
         }).done();
 }
 
-module.exports.testSplitObject = function(done){
+module.exports.testNo = function(done){
     ruze.endpoint('mock:out', function(mockEnd){
         mockEnd.expectedMessageCount(1);
-        ruze.send('direct:b', {one:'one', two:'two'});
+        ruze.send('direct:a', '1');
         mockEnd.assert();
     }).then(function(){
             done.done()
         }).done();
 }
+
+

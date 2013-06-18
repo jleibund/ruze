@@ -22,6 +22,7 @@ module.exports.setUp = function(done){
             done();
         });
     } else {
+        console.log(ruze.print())
         done();
     }
 

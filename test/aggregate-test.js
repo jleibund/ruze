@@ -44,6 +44,7 @@ module.exports.setUp = function(done){
 
         });
         ruze.start(function(){
+            console.log(ruze.print())
             done()
         });
     } else {
