@@ -204,11 +204,8 @@ We will expand this library over time in the /extras directory for you to pick f
     /extras/server/file
     /extras/client/dom
 
-These will be organized by plugins that work only on the server, only on the client, or both.  You can add new directories to scan for plugins like so
-
-    ruze.loaders.local.addPath('extras')
-
-This could be a directory of your own plugin components.  This works in both the nodejs and server environment.
+You can add your own plugin components here beyond those provided.  They are labeled to differentiate those that work
+in a the nodejs/server environment (e.g. file system access), those that work only in the browser, and those that are shared.
 
 ##Testing
 
