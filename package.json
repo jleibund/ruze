@@ -1,7 +1,8 @@
 {
     "name":"ruze",
-    "version":"0.0.1",
+    "version":"0.1.0",
     "private":false,
+    "author": "J.P. Leibundguth <jleibund@gmail.com>",
     "dependencies":{
         "amdefine":"latest",
         "node-uuid":"latest",
@@ -35,5 +36,20 @@
                 "ruze":"./ruze"
             }
         }
+    },
+    "keywords": [
+        "framework",
+        "integration",
+        "routes",
+        "distributed",
+        "processing"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:jleibund/ruze"
+    },
+    "optionalDependencies": {},
+    "engines": {
+        "node": "*"
     }
 }
