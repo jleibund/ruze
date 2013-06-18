@@ -1,34 +1,14 @@
 ruze
 =======
 
-EIP with remoting for javascript
+integration patterns with remoting for javascript
 
 ##Getting Started.
 Add ruze to your package.json, npm install or include contents of lib in html script with requirejs (see example in /public)
 
     npm install ruze
 
-OR copy files to your /public directory in /lib and /public:
-
-	requirejs.config({
-    	baseUrl:'/js',
-    	paths:{
-        	ruze:'ruze',
-        	cutils:'ruze/cutils',
-	        path:'ruze/path',
-    	    conf:'../conf'
- 	   }
-	})
-
-	requirejs(['ruze/ruze','jquery','text!conf/		ruze.json'], function(Ruze,$,json) {
-
-	    var ruze = new Ruze();
-
-	    ruze.configure(json);
-
-	    ruze.start()
-	}
-
+OR see examples/multiserver public directory for an example of how to embed in the client
 ##Configuration
 
 Ruze uses requirejs on both client and server.  It is configured with routes that you define in either Javascript or JSON:
@@ -43,7 +23,7 @@ Ruze uses requirejs on both client and server.  It is configured with routes tha
  
      });
      
-OR
+OR you can define this in a json file - see examples/multiserver/conf directory
 
 	{
 	    "plugins":{
@@ -88,11 +68,38 @@ In Ruze you define routes similar to other EIP architectures.  The DSL is both b
 	from()  //starts a route, takes an endpoint defn
     to() //continues the route with an endpoint defn
     endpoint() // defines a single endpoint
+
     expr() // takes a javascript expression
-    when(),  // control structure, js expression 
+
+    when(),  // control structure, js expression (use multiple if you like, end with otherwise)
     otherwise() // control structure, js expression
-    process()  // takes a function for inline defn
-    
+
+    process()  // takes a function for inline defn as follows, remember to call next(), this is async:
+                .process(function(exchange,next){
+                    exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
+                    next();
+                })
+
+    split()   //  takes an expression to split on, and optionally a character as the termination string (if the body is a string)
+              //  if the body is an array, split will send each item as its own exchange, ditto for an object (treats fields as rows)
+
+                .split('in.body','\n')
+
+    aggregate()  // takes an object with the multiple conditions, the first condition to 'finish' completes that batch:
+           completionFromBatchConsumer  // a boolean used in conjunction with endpoints like 'file' or the splitter for streaming
+           completionPredicate // a string with in expr (javascript) condition format to signal completion condition
+           completionInterval  // will complete a new batch after this number of ms after the last record was received
+           completionTimeout   // will complete a batch after this timeout
+           completionSize      // will complete batches once it has this many records
+           strategy   // this is the aggregation strategy, it supports 'arrayStrategy', 'stringStrategy', or a function of your choosing
+
+                        function(ruze, oldEx, newEx){
+                            if (!oldEx) return newEx;
+                            oldEx.in.body = oldEx.in.body + '--doodoo--' +newEx.in.body;
+                            return oldEx;
+                        }})
+           // aggregate uses the fields aggregateId, index, and complete in your exchange's header when in batch consumer mode
+
 Endpoints, used in from(), to(), and endpoint() define instances of plugins as defined in the /plugin directory.  You can create, configure and add your own.  They are defined in a quasi URI format:
 
 	[<container>:]? <plugin> : <object/id> ? arg1=1,arg2=2
@@ -226,30 +233,18 @@ Ruze supports a testing structure using an endpoint called mock.
 ##Remoting
 One ultimate goal of this project is to allow you to define routes across a distributed architecture of ruze nodes.  This is a work in progress so this section is about what to expect shortly.
 
-We are adding a socket.io backplane across instances so that you can define the following:
+We are adding a socket.io backplane across instances, please look at the examples/multiserver project to see it in action
+Your browser(s) environment, 'myserver', and 'server2' run ruze with different roles, loaded plugins, etc.
 
-    ruze.configure(function (from) {
-        from('dom:h1.project?on=click')
-            .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
-            .to('myserver:direct:a')
-            .expr('in.body="event is " + in.body.type + ""')
-            .to('local:console:out')
-            .to('myserver:console:out')
-            .to('server2:direct:e');
-    });
-		
-Where your browser environment, 'myserver', and 'server2' run ruze with different roles, loaded plugins, etc.  There is an example of this now in the root directory.  To try it out follow these steps:
-
-    // 1.  start myserver
-    node server.js
-
-    // 2.  start server2
+    // 1.  start server2
     node server2.js
 
+    // 2.  start server - they will link
+    node server.js
+
     // 3.  in a browser go to http://localhost:4000
-    //      when the environment has loaded, you will see the diagnostics appear on the page
+    //      when the environment has loaded, you will see the diagnostics appear on the page, if it doesn't reload, its a Q/promise load issue
 
     // 4.  click on the sample text on the page, inspect the browser console and the two other
     //      server windows, you should see event routing as described in the route.
 
-We are currently working on next steps for this, foremost on deconstructing routes when clients disconnect from the environment.
