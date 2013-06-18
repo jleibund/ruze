@@ -204,6 +204,39 @@ We will expand this library over time in the /extras directory for you to pick f
     /extras/server/file
     /extras/client/dom
 
+##File Endpoint
+
+File used to read files from a directory or write to them allowing you to stream and process the results
+
+            from('file:/Users/me/dev/ruze/test/in?once=true&archive=true&mode=line&buffer=true')
+            ...
+            .to('file:/Users/me/dev/ruze/test/out?mode=stream')
+
+This component accepts the following parameters
+            ignored   // ignores a directory called .ruze, created for producers to place processed files afterward
+            persistent // informs underlying fs whether to keep the worker running
+            ignorePermissionErrors // ignores permission errors when reading/writing to a directory
+            ignoreInitial  // will ignore any initial file detections on startup (if files are resident in the directory)
+            interval // the detection interval in milliseconds
+            binaryInterval // the binary interval in milliseconds
+            archive // if set to true will move processed files to the ./.ruze directory for producers, otherwise discard process files
+            mode: // 'line' streams files line by line, 'file' reads in the whole file at once, 'stream' works on a buffer size basis
+            buffer: // either false, or the buffer size for mode : 'buffer' setting, above
+
+To see an example of this file running, try the test/file-test.js test file.
+
+##DOM Endpoint
+
+DOM uses jQuery to select an element and and event from which all event data becomes the body of the resulting exchange(s)
+
+        from('dom:h1.project?on=click')
+            .expr('in.body={timestamp:in.body.timeStamp, text:in.body.currentTarget.outerText, type:in.body.type}')
+            .to('myserver:direct:a')
+
+To see an example of this, look at the examples/multiserver/public/js/main.js file and try running the example (instructions, below)
+
+
+
 You can add your own plugin components here beyond those provided.  They are labeled to differentiate those that work
 in a the nodejs/server environment (e.g. file system access), those that work only in the browser, and those that are shared.
 
