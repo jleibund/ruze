@@ -66,15 +66,33 @@ OR you can define this in a json file - see examples/multiserver/conf directory
 In Ruze you define routes similar to other EIP architectures.  The DSL is both built-in but extensible:
 
 	from()  //starts a route, takes an endpoint defn
-    to() //continues the route with an endpoint defn
-    endpoint() // defines a single endpoint
 
-    expr() // takes a javascript expression
+	    from('direct:a').to(...)
+
+    to() //continues the route with an endpoint defn
+
+        .to('console:out')
+
+    endpoint() // defines a single endpoint, used with custom components to specify 'the' instance
+
+    expr() // takes a javascript expression, see expresssion language in section below
+
+        from('direct:a')
+            .expr('out.body = (in.header.a == 3) ? 'one', 1')
 
     when(),  // control structure, js expression (use multiple if you like, end with otherwise)
-    otherwise() // control structure, js expression
+    otherwise() // control structure
+
+        ...
+        .when('in.header.b = 'b')
+            .to(...)
+        .when('in.header.b = 3)
+            .to(...)
+        .otherwise()
+            .to(...)
 
     process()  // takes a function for inline defn as follows, remember to call next(), this is async:
+
                 .process(function(exchange,next){
                     exchange.out.body = '{\"statement\":\"'+exchange.in.body+'\"}';
                     next();
@@ -100,15 +118,21 @@ In Ruze you define routes similar to other EIP architectures.  The DSL is both b
                         }})
            // aggregate uses the fields aggregateId, index, and complete in your exchange's header when in batch consumer mode
 
+
+                .aggregate({completionFromBatchConsumer:true})
+
+                .aggregate({completionTimeout:1000, completionInterval:500})
+
+                .aggregate({completionFromBatchConsumer:true, strategy:function(ruze, oldEx, newEx){
+                    if (!oldEx) return newEx;
+                    oldEx.in.body = oldEx.in.body + '--doodoo--' +newEx.in.body;
+                    return oldEx;
+                }})
+
+
 Endpoints, used in from(), to(), and endpoint() define instances of plugins as defined in the /plugin directory.  You can create, configure and add your own.  They are defined in a quasi URI format:
 
 	[<container>:]? <plugin> : <object/id> ? arg1=1,arg2=2
-	
-Example:
-
-	"direct:out"
-	"file:/somedirectory?debug=true"
-	"myserver:file:/somedirectory"
 	
 The container is optional.  When not specified it will try to find the plugin in the local environment, or "local", otherwise it can search for it on remote instances.  You can also specify "local" to force it to run locally or specify a remote identifier (more on that in config for remoteloader).
 
@@ -189,17 +213,7 @@ This allows you to do dynamic routing at any point you choose.  The Exchange is 
 ##Plugins
 
 Base-level plugins live in the /plugin directory or one you specify with your extensions.  Once you define a plugin, if appropriate, it can run either on the server (nodejs) in within the browser.  Plugins have a lifecycle where they are configured, overall using a config() call (class-level), they can have a initialize() per instance, and may define a consume() and produce() action. In addition, they can modify Ruze DSL through the mixin() call during config().  See /plugin/process/process.js for an example of how this works.
-
-The basic set of plugins are:
-
-	console
-	direct
-	expr
-	mock
-	process
-	when
-	
-We will expand this library over time in the /extras directory for you to pick from, for example
+We will expand this library over time in the /extras directory for you to pick from.  Currently it contains:
 
     /extras/server/file
     /extras/client/dom
