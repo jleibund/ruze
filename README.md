@@ -4,7 +4,7 @@ ruze
 integration patterns with remoting for javascript
 
 ##Getting Started.
-Add ruze to your package.json, npm install or include contents of lib in html script with requirejs (see example in /public)
+Add ruze to your package.json, npm install or include contents of lib in html script with requirejs (see example in examples/multiserver/public)
 
     npm install ruze
 
