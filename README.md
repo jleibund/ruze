@@ -226,7 +226,12 @@ File used to read files from a directory or write to them allowing you to stream
             ...
             .to('file:/Users/me/dev/ruze/test/out?mode=stream')
 
-This component accepts the following parameters
+To use this component, make sure you run an npm install in its directory so it can build out what it needs
+
+            cd extras/server/file
+            npm install
+
+The file component accepts the following parameters that govern how it handles files and their contents
             ignored   // ignores a directory called .ruze, created for producers to place processed files afterward
             persistent // informs underlying fs whether to keep the worker running
             ignorePermissionErrors // ignores permission errors when reading/writing to a directory
