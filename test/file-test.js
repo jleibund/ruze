@@ -18,11 +18,10 @@ module.exports.setUp = function(done){
                 .to('mock:out');
         });
         ruze.start(function(){
-            ruze.print();
+            console.log(ruze.print())
             done();
         });
     } else {
-        console.log(ruze.print())
         done();
     }
 
